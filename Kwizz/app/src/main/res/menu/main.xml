@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:id="@+id/miHome"
+        android:title="@string/goHome"
+        android:orderInCategory="1"
+        ></item>
+    <item android:id="@+id/miGo"
+        android:title="@string/goGo"
+        android:orderInCategory="2"
+        ></item>
+    <item android:id="@+id/miScores"
+        android:title="@string/goScores"
+        android:orderInCategory="3"
+        ></item>
+    <item android:id="@+id/miAbout"
+        android:title="@string/goAbout"
+        android:orderInCategory="4"
+        ></item>
+</menu>

@@ -1,11 +1,13 @@
 package ca.ipd12.quiz.rd.kwizz;
 
 import android.content.ContentValues;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 
 import com.facebook.stetho.Stetho;
 
@@ -15,7 +17,7 @@ import java.util.concurrent.ThreadLocalRandom;
 import static ca.ipd12.quiz.rd.kwizz.Globals.TAG;
 import static ca.ipd12.quiz.rd.kwizz.Globals.VER;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends MenuActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,6 +82,8 @@ public class MainActivity extends AppCompatActivity {
 
         }
     }
+
+
     public void fetcher(){
         MyDbHelper dbHelper = new MyDbHelper(this, "kwizzdb", null, VER);
         SQLiteDatabase db  = dbHelper.getReadableDatabase();
@@ -107,4 +111,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+    public void openQuiz(View view) {
+        Intent myIntent = new Intent(MainActivity.this, QuizActivity.class);
+//        myIntent.putExtra("key", value); //Optional parameters
+        MainActivity.this.startActivity(myIntent);
+    }
+
+    public void showScores(View view) {
+    }
 }

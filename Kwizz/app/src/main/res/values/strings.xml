@@ -1,3 +1,21 @@
 <resources>
     <string name="app_name">Kwizz</string>
+
+    <!--Main Menu-->
+    <string name="goGo">Start quiz</string>
+    <string name="goHome">Home page</string>
+    <string name="goAbout">About</string>
+    <string name="goScores">History</string>
+
+    <!--First Page-->
+    <string name="tbEmail">Enter your email</string>
+    <string name="btGo">Start quiz</string>
+    <string name="btScores">History</string>
+
+    <!--Quiz Activity-->
+    <string name="btBack">Previous</string>
+    <string name="btForward">Next</string>
+    <string name="btConfirm">Confirm</string>
+    <string name="btEmail">Send results on my email</string>
+
 </resources>
