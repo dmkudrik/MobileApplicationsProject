@@ -28,6 +28,13 @@ public class MyDbHelper extends SQLiteOpenHelper {
                 "  [iscorrect] BOOLEAN NOT NULL DEFAULT 'false'\n" +
                 ")");
         Log.i(Globals.TAG, "Table answers was created");
+
+        db.execSQL("CREATE TABLE history (\n" +
+                " id integer PRIMARY KEY AUTOINCREMENT, \n" +
+                " email text NOT NULL, \n" +
+                " result double NOT NULL \n" +
+                ")");
+        Log.i(Globals.TAG, "Table history was created");
     }
 
     @Override
@@ -37,6 +44,9 @@ public class MyDbHelper extends SQLiteOpenHelper {
 
         sqLiteDatabase.execSQL("drop table if exists questions");
         Log.i(Globals.TAG, "Table questions was dropped");
+
+        sqLiteDatabase.execSQL("drop table if exists history");
+        Log.i(Globals.TAG, "Table history was dropped");
         onCreate(sqLiteDatabase);
     }
 
