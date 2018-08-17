@@ -68,6 +68,12 @@ public class QuizActivity extends MenuActivity {
         for(int i = 0; i < 10; i++) {
             Globals.currentQuestions.add(Globals.allQuestions.get(i));
         }
+        //Clear previous answers
+        for(Question sq : currentQuestions){
+            sq.checkedAnswer=777;
+            sq.isChecked=false;
+            sq.isConfirmed=false;
+        }
     }
 
     private ArrayList<Question> getAllQuestions() {
@@ -128,14 +134,16 @@ public class QuizActivity extends MenuActivity {
         if(Globals.currentQuestions.get(currentQuestionNumber).isChecked){
             ca= Globals.currentQuestions.get(currentQuestionNumber).checkedAnswer;
         }
-
+        rg.clearCheck();
         for(int i=0; i<numberOfAnswers; i++){
+
             rb  = new RadioButton(this);
             rb.setText(q.answers.get(i).answer);
             rb.setId(i);
-            if(ca==i)rb.setChecked(true);
+            if(ca==i)rb.setChecked(true); // in case question was already checked
             rg.addView(rb);
         }
+
     }
 
     public void goBack(View view) {
@@ -165,7 +173,7 @@ public class QuizActivity extends MenuActivity {
         //TO DO
 
         //changes to Globals
-        setCurrentQuestions(); //get 10 random questions
+        setCurrentQuestions(); //get new 10 random questions
         currentQuestionNumber=0;
         addQuestion(Globals.currentQuestionNumber); // 1 - show number + text + answers for the first question
     }

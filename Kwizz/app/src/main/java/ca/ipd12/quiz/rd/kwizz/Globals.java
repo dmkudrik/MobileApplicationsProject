@@ -3,7 +3,7 @@ package ca.ipd12.quiz.rd.kwizz;
 import java.util.ArrayList;
 
 public class Globals {
-    public static final int VER = 18;
+    public static final int VER = 19;
     public static final String TAG = "kwizzz";
 
 

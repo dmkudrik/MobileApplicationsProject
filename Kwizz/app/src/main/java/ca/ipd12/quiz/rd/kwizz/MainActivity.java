@@ -50,7 +50,7 @@ public class MainActivity extends MenuActivity {
         //generating numberOfQuestions questions
         for (int i = 0; i < numberOfQuestions; i++) {
             q = new Question();
-            q.question = "Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum?";
+            q.question = "Lorem Ipsum"+(i+1) +" Question?";
 //            Log.i(TAG, "Q"+ (i+1)+": "+q.question);
 
             //2 to 5 - number of answers generator
@@ -63,7 +63,7 @@ public class MainActivity extends MenuActivity {
             correctIsDefined = false;
             for (int k = 0; k < numberOfAnswers; k++) {
                 a = new Answer();
-                a.answer = "Lorem Ipsum Lorem Ipsum Lorem Ipsum.";
+                a.answer = "Answer " + (k+1);
                 if (k == (correctAnswer - 1)) a.isCorrect = true;
 //                Log.i(TAG, "A"+ (k+1)+": "+a.answer + (a.isCorrect ? " - Correct one!": ""));
                 answers.add(a);
