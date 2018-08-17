@@ -9,7 +9,7 @@ import android.widget.RadioGroup;
 public class QuizActivity extends MenuActivity {
 
     RadioButton rb;
-    RadioGroup rg = findViewById(R.id.rgAnswers);
+    RadioGroup rg;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,6 +21,7 @@ public class QuizActivity extends MenuActivity {
 
     //Add answers for the current question to the layout
     public void addRadioButtons(){
+        rg = findViewById(R.id.rgAnswers);
         int numberOfAnswers = 3;
         for(int i=0; i<numberOfAnswers; i++){
             rb  = new RadioButton(this);
