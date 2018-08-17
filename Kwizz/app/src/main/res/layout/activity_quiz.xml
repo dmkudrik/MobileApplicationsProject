@@ -9,27 +9,29 @@
     android:padding="5dp"
     >
     <TextView
+        android:id="@+id/tvEnum"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Question 1 of 10!"
+        android:text="Question ? of ??!"
         android:textColor="@color/colorPrimaryDark"
         android:textSize="20sp"
         android:layout_gravity="center_horizontal"
         android:layout_marginBottom="5dp"
     />
     <TextView
+        android:id="@+id/tvQuestion"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Question content Question content Question content?"
+        android:text="Ups... Something went wrong ("
         android:layout_marginBottom="10dp"
-        android:textSize="15dp"
+        android:textSize="16dp"
         />
     <RadioGroup
         android:id="@+id/rgAnswers"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="15dp"
-        android:onClick="answerChecked"
+
         >
 
     </RadioGroup>
