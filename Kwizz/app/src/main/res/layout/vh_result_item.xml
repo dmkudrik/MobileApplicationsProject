@@ -7,7 +7,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:heightSum="5"
+        android:weightSum="5"
         android:orientation="horizontal">
 
         <ImageView
