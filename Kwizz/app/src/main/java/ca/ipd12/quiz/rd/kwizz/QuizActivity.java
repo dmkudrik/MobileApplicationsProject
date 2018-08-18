@@ -21,6 +21,7 @@ import java.util.Collections;
 
 import static ca.ipd12.quiz.rd.kwizz.Globals.TAG;
 import static ca.ipd12.quiz.rd.kwizz.Globals.VER;
+import static ca.ipd12.quiz.rd.kwizz.Globals.confirmedAnswers;
 import static ca.ipd12.quiz.rd.kwizz.Globals.currentQuestionNumber;
 import static ca.ipd12.quiz.rd.kwizz.Globals.currentQuestions;
 
@@ -30,7 +31,9 @@ public class QuizActivity extends MenuActivity {
     RadioGroup rg;
     TextView tv;
     Button bt;
+    boolean isDone = false;
     RadioButton [] rbb = new RadioButton[10]; //array of questions indicators
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,20 +46,30 @@ public class QuizActivity extends MenuActivity {
     }
 
     private void setIndicators() {
+        //
         LinearLayout ll = findViewById(R.id.indicators);
+        for (int i =0; i<10;i++ ){
+            rbb[i]= (RadioButton) ll.getChildAt(i);
+        }
+        //if there are confirmed questions -> set indicators
+        if(confirmedAnswers == 10){
+            showResults();
+        }
+        else if(confirmedAnswers>0){
             for (int i =0; i<10;i++ ){
-                rbb[i]= (RadioButton) ll.getChildAt(i);
+                if(currentQuestions.get(i).isConfirmed)
+                    rbb[i].setChecked(true);
             }
+        }
     }
 
-    //user checked a radiobutton
+    //user checked a answer-radiobutton - event listener
     private void addAnswersListener() {
         rg = (RadioGroup) findViewById(R.id.rgAnswers);
         rg.clearCheck();
         rg.setOnCheckedChangeListener(new  RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
-
                 RadioButton rb = (RadioButton) group.findViewById(checkedId);
                 if (null != rb && (checkedId != -1)) {
                     Globals.currentQuestions.get(currentQuestionNumber).checkedAnswer=checkedId;
@@ -83,47 +96,46 @@ public class QuizActivity extends MenuActivity {
         Globals.currentQuestions = new ArrayList<>();
         for(int i = 0; i < 10; i++) {
             Globals.currentQuestions.add(Globals.allQuestions.get(i));
-
         }
         //Clear previous answers
         for(Question sq : currentQuestions){
             sq.checkedAnswer=777;
             sq.isChecked=false;
             sq.isConfirmed=false;
-
         }
     }
 
+    //fetches a set of questions from an external source
     private ArrayList<Question> getAllQuestions() {
         MyDbHelper dbHelper = new MyDbHelper(this, "kwizzdb", null, VER);
         SQLiteDatabase db  = dbHelper.getReadableDatabase();
         String MY_QUERY = "SELECT q.id, q.question, a.answer, a.iscorrect FROM questions q INNER JOIN answers a ON q.id=a.qid";
         Cursor cursor = db.rawQuery(MY_QUERY, new String[]{});
         cursor.moveToFirst();
+
         ArrayList<Question> qq = new ArrayList<>();
         Question q = new Question();
         q.answers = new ArrayList<>();
         Answer a;
-        int currQ = -1; //current question id
+        int currentQuestionId = -1; //current question id
         while ( !cursor.isAfterLast()) {
-            if(cursor.getInt(0)==currQ){
+            if(cursor.getInt(0)==currentQuestionId){
                 a= new Answer();
                 a.answer = cursor.getString(2);
-                a.isCorrect = Boolean.parseBoolean( cursor.getString(3) );
+                a.isCorrect = cursor.getInt(3) == 1 ? true : false ;
                 q.answers.add(a);
             }else {
-                if (currQ!=-1) qq.add(q);
+                if (currentQuestionId!=-1) qq.add(q);
                 q = new Question();
                 q.answers=new ArrayList<>();
-                currQ = cursor.getInt(0);
+                currentQuestionId = cursor.getInt(0);
                 q.question = cursor.getString(1);
                 a = new Answer();
                 a.answer = cursor.getString(2);
-                a.isCorrect = Boolean.parseBoolean( cursor.getString(3) );
+                a.isCorrect = cursor.getInt(3) == 1 ? true : false ;
                 q.answers.add(a);
                 //Log.i(TAG, cursor.getString(0) + " - " + cursor.getString(1));
             }
-
             cursor.moveToNext();
         }
         qq.add(q);
@@ -135,20 +147,18 @@ public class QuizActivity extends MenuActivity {
 
         //show enumeration
         tv = findViewById(R.id.tvEnum);
-        tv.setText("Question " + (currQN + 1) + " of 10!");
+        tv.setText("Question " + (currQN + 1) + " of 10!" + "confirmed - " + confirmedAnswers);
 
         //show question
         tv = findViewById(R.id.tvQuestion);
         tv.setText(currentQuestions.get(currQN).question);
 
-        //show answers
+        //generate radio buttons and show answers
         rg = findViewById(R.id.rgAnswers);
         rg.removeAllViews();
         Question q = currentQuestions.get(currQN);
         int numberOfAnswers = q.answers.size();
-
-        //if question was checked set to 'ca' the checked number
-        int ca=-1;
+        int ca=-1; //if question was checked set to 'ca' the checked number
         if(Globals.currentQuestions.get(currentQuestionNumber).isChecked){
             ca= Globals.currentQuestions.get(currentQuestionNumber).checkedAnswer;
         }
@@ -169,10 +179,12 @@ public class QuizActivity extends MenuActivity {
         }else{
             bt.setEnabled(true);
         }
-        //set background for indicator
-        rbb[currentQuestionNumber].setBackgroundColor(getResources().getColor(R.color.colorCurrent));
+        //set background for active indicator (current question)
+        if(confirmedAnswers==10) showResults();
+        else rbb[currentQuestionNumber].setBackgroundColor(getResources().getColor(R.color.colorCurrent));
     }
 
+    //Go to previous question
     public void goBack(View view) {
         //Show previous answer
         if(currentQuestionNumber>0){
@@ -182,6 +194,7 @@ public class QuizActivity extends MenuActivity {
         addQuestion(currentQuestionNumber);
     }
 
+    //Confirm answer
     public void confirm(View view) {
         //Confirm and go to the next
         Question cq = currentQuestions.get(currentQuestionNumber);
@@ -189,11 +202,35 @@ public class QuizActivity extends MenuActivity {
             cq.isConfirmed = true;
             bt = findViewById(R.id.btConfirm);
             bt.setEnabled(false);
+            confirmedAnswers++;
             rbb[currentQuestionNumber].setChecked(true);
-            goForward(view);
+            if (confirmedAnswers==10){
+                //show the results
+                showResults();
+            }else{
+                //show the next question
+                goForward(view);
+            }
+
         }
     }
 
+    private void showResults() {
+        for(int i = 0; i<10;i++){
+            Question q = currentQuestions.get(i);
+            if(q.checkedAnswer==q.getCorrectAnswer()){
+                //set indicator to green
+                rbb[i].setChecked(true);
+                rbb[i].setBackgroundColor(Color.GREEN);
+            }else{
+                //set indicator to red
+                rbb[i].setChecked(true);
+                rbb[i].setBackgroundColor(Color.RED);
+            }
+        }
+    }
+
+    //Go to the next question
     public void goForward(View view) {
         if(currentQuestionNumber<9){
             rbb[currentQuestionNumber].setBackgroundColor(Color.TRANSPARENT);
@@ -208,28 +245,27 @@ public class QuizActivity extends MenuActivity {
     public void resetQuiz(View view) {
     }
 
+    //If there are confirmed answers, ask for confirmation
     public void newQuiz(View view) {
-        //If there are questions answered, ask for confirmation
-        //TO DO
-        int answered = 0;
-        for(int i = 0; i<10;i++){
-            if(currentQuestions.get(i).isConfirmed) answered++;
-        }
-        if(answered>0 && answered<9 ){
+        if(confirmedAnswers>0 && confirmedAnswers<9 ){
+            //Show confirmation dialog
             new AlertDialog.Builder(this)
-                    .setTitle("New quiz confirmation")
-                    .setMessage("You have answered questions !!! Press 'Ok' to leave current quiz or 'Cancel' to continue.")
+                    .setTitle("Start a new quiz?")
+                    .setMessage("Press 'Ok' to begin a new quiz or 'Cancel' to continue.")
                     .setIcon(android.R.drawable.ic_dialog_alert)
                     .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-
                         public void onClick(DialogInterface dialog, int whichButton) {
-
-                            Toast.makeText(QuizActivity.this, "Yaay", Toast.LENGTH_SHORT).show();
+                            startNewQuiz(); //confirmed!
                         }})
                     .setNegativeButton(android.R.string.no, null).show();
-            return; // ASK user for confirmation
+            return; // Continue current quiz
+        }else{
+            startNewQuiz();
         }
+    }
 
+    //Reset current results, shuffle questions, and begin a new one
+    public void startNewQuiz(){
         for(int i = 0; i<10;i++){
             rbb[i].setChecked(false);
             rbb[i].setBackgroundColor(Color.TRANSPARENT);
@@ -237,8 +273,11 @@ public class QuizActivity extends MenuActivity {
         //changes to Globals
         setCurrentQuestions(); //get new 10 random questions
         currentQuestionNumber=0;
+        confirmedAnswers=0;
         addQuestion(Globals.currentQuestionNumber); // 1 - show number + text + answers for the first question
     }
+
+
 
 
 }

@@ -10,8 +10,10 @@ public class Question {
     public int checkedAnswer=777; // get value 0 to 4
     //public int correctAnswer = getCorrectAnswer();
     public int getCorrectAnswer(){
+        int k;
         for (int i = 0; i<answers.size();i++){
             if (this.answers.get(i).isCorrect) return i;
+            k=0;
         }
         return -1;
     }

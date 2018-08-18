@@ -8,6 +8,7 @@ public class Globals {
 
 
     public static int currentQuestionNumber = -1;
+    public static int confirmedAnswers = 0;
     public static ArrayList<Question> allQuestions;
     public static ArrayList<Question> currentQuestions= new ArrayList<>();
 
