@@ -1,40 +1,36 @@
 package ca.ipd12.quiz.rd.kwizz;
 
+import org.jsoup.Jsoup;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.facebook.stetho.Stetho;
 
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.concurrent.ThreadLocalRandom;
 
 import static ca.ipd12.quiz.rd.kwizz.Globals.TAG;
 import static ca.ipd12.quiz.rd.kwizz.Globals.VER;
+import static ca.ipd12.quiz.rd.kwizz.Globals.allQuestions;
 
 public class MainActivity extends MenuActivity {
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        Stetho.initializeWithDefaults(this); // Stetho
-
-        quizGenerator();
-        fetcher();
-    }
-
-
-    //method is used to Generate random questions and answers on the development stage
     Question q;
     Answer a;
     int numberOfQuestions = 15;
@@ -43,46 +39,174 @@ public class MainActivity extends MenuActivity {
     int maxAnswers = 5;
     ArrayList<Answer> answers;
 
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        Stetho.initializeWithDefaults(this); // Stetho
+
+        //quizGenerator();
+        //fetcher();
+    }
+    public void getData(View view){
+
+        URL apiURL;
+        try{
+            apiURL= new URL("https://opentdb.com/api.php?amount="+Globals.VER);
+            new FetchDataFromApi().execute(apiURL);
+        }
+        catch (MalformedURLException e){
+            e.printStackTrace();
+        }
+
+
+    }
+    public  class FetchDataFromApi extends AsyncTask<URL, Void, String> {
+
+        @Override
+        protected String doInBackground(URL... urls) {
+            String response="";
+            URL myURL =urls[0];
+            try {
+                response =  NetworkUtility.getResponseFromHttpUrl(myURL);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return response;
+        }
+        @Override
+        protected  void  onPostExecute (String s){
+            // super.onPostExecute(s);
+           // TextView tv = findViewById(R.id.tvResult);
+
+           getDataFromJSON(s);
+            quizGenerator();
+            fetcher();
+            //tv.setText(question);
+        }
+        private void getDataFromJSON(String s) {
+            final   String RESULTS = "results";
+            final   String QUESTION = "question";
+            final   String CORR_ANSWER = "correct_answer";
+            final   String INCORR_ANSWER = "incorrect_answers";
+
+            q = new Question();
+            answers = new ArrayList<>();
+            a = new Answer();
+
+
+            String question="";
+            String corAnswer ="";
+            String incorAnswer="";
+
+            JSONObject Json = null;
+            JSONObject Json2 = null;
+            try {
+                Json = new JSONObject(s);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            JSONArray resultsArray=null;
+            try {
+                resultsArray = Json.getJSONArray(RESULTS);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+
+
+            JSONObject JSON=null;
+
+            for(int i = 0; i < resultsArray.length(); i++) {
+
+                try {
+                    JSON = resultsArray.getJSONObject(i);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+
+                JSONArray resultsArray2;
+                try {
+                    question = Jsoup.parse(JSON.getString(QUESTION)).text();////////////////Jsoup library
+                    q.question = question;
+
+
+                    corAnswer= Jsoup.parse(JSON.getString(CORR_ANSWER)).text();////////////////Jsoup library
+                    System.out.println(corAnswer);
+                    a.answer=corAnswer;
+                    a.isCorrect=true;
+
+
+                    answers.add(a);
+                    resultsArray2 = JSON.getJSONArray(INCORR_ANSWER);
+
+                    for(int j = 0; j < resultsArray2.length(); j++) {
+                          Answer aIncorr=new Answer();
+                        incorAnswer = Jsoup.parse(resultsArray2.get(j).toString()).text();////////////////Jsoup library
+
+                        System.out.println(incorAnswer);
+
+                        aIncorr.answer = incorAnswer;
+                        answers.add(aIncorr);
+                        q.answers=answers;
+                        allQuestions.add(q);
+                    }
+            //System.out.println(q.question.toString());
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+        }
+
+
+    }
+
+    //method is used to Generate random questions and answers on the development stage
+
+
     public void quizGenerator() {
-        readFromFile();
+      //  readFromFile();
 
 
         //generating numberOfQuestions questions
-        for (int i = 0; i < numberOfQuestions; i++) {
-            q = new Question();
-            q.question = "Lorem Ipsum"+(i+1) +" Question?";
-//            Log.i(TAG, "Q"+ (i+1)+": "+q.question);
-
-            //2 to 5 - number of answers generator
-            int numberOfAnswers = ThreadLocalRandom.current().nextInt(minAnswers, maxAnswers + 1);
-
-            //correct answer definer
-            int correctAnswer = ThreadLocalRandom.current().nextInt(1, numberOfAnswers + 1);
-
-            answers = new ArrayList<>();
-            correctIsDefined = false;
-            for (int k = 0; k < numberOfAnswers; k++) {
-                a = new Answer();
-                a.answer = "Answer " + (k+1);
-                if (k == (correctAnswer - 1)) a.isCorrect = true;
-//                Log.i(TAG, "A"+ (k+1)+": "+a.answer + (a.isCorrect ? " - Correct one!": ""));
-                answers.add(a);
-            }
+        for (int i = 0; i < allQuestions.size(); i++) {System.out.println(allQuestions.get(i).question.toString());
+//            q = new Question();
+//            q.question = "Lorem Ipsum"+(i+1) +" Question?";
+////            Log.i(TAG, "Q"+ (i+1)+": "+q.question);
+//
+//            //2 to 5 - number of answers generator
+//            int numberOfAnswers = ThreadLocalRandom.current().nextInt(minAnswers, maxAnswers + 1);
+//
+//            //correct answer definer
+//            int correctAnswer = ThreadLocalRandom.current().nextInt(1, numberOfAnswers + 1);
+//
+//            answers = new ArrayList<>();
+//            correctIsDefined = false;
+//            for (int k = 0; k < numberOfAnswers; k++) {
+//                a = new Answer();
+//                a.answer = "Answer " + (k+1);
+//                if (k == (correctAnswer - 1)) a.isCorrect = true;
+////                Log.i(TAG, "A"+ (k+1)+": "+a.answer + (a.isCorrect ? " - Correct one!": ""));
+//                answers.add(a);
+//            }
 
             //Save question into db - transaction
             MyDbHelper dbHelper = new MyDbHelper(this, "kwizzdb", null, Globals.VER);
             SQLiteDatabase db = dbHelper.getWritableDatabase();
 
             ContentValues values = new ContentValues();
-            values.put("question", q.question);
+            values.put("question", allQuestions.get(i).question.toString());
             long rowId = db.insert("questions", null, values);
             Log.i(TAG, "Row number of added question is " + rowId);
 
-            for (int ans = 0; ans < numberOfAnswers; ans++) {
+            for (int ans = 0; ans < allQuestions.get(i).answers.size(); ans++) {
                 ContentValues values2 = new ContentValues();
                 values2.put("qid", rowId);
-                values2.put("answer", (answers.get(ans)).answer);
-                values2.put("iscorrect", answers.get(ans).isCorrect);
+                values2.put("answer", (allQuestions.get(i).answers.get(ans).answer));
+                values2.put("iscorrect", (allQuestions.get(i).answers.get(ans).isCorrect));
                 long rowId2 = db.insert("answers", null, values2);
                 Log.i(TAG, "Row number of added answer is " + rowId2);
             }
@@ -126,46 +250,5 @@ public class MainActivity extends MenuActivity {
     public void showScores(View view) {
     }
 
-    public void readFromFile() {
-        String fileName = "..\\..\\questions.txt";
-        String line = null;
 
-        try {
-
-            FileReader fileReader =
-                    new FileReader(fileName);
-
-
-            BufferedReader bufferedReader =
-                    new BufferedReader(fileReader);
-
-            while ((line = bufferedReader.readLine()) != null) {
-
-                String[] tokens = line.split("#");
-                //Log.i(TAG, tokens[1]);
-
-                q = new Question();
-                q.question=tokens[0];
-                String[]thisAnswers = tokens[1].split(";");
-
-
-                for (int i=0;i<thisAnswers.length;i++){
-                    a = new Answer();
-                    a.answer=thisAnswers[i];
-                    answers.add(a);
-                }
-                q.answers = answers;
-
-            }
-
-
-            bufferedReader.close();
-        } catch (FileNotFoundException ex) {
-            Log.e(TAG, "Unable to open file " + ex.getMessage());
-
-        } catch (IOException ex) {
-            Log.e(TAG, "Error reading file  " + ex.getMessage());
-
-        }
-    }
 }
