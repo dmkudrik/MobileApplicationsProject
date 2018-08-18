@@ -38,7 +38,7 @@ public class MainActivity extends MenuActivity {
     int minAnswers = 2;
     int maxAnswers = 5;
     ArrayList<Answer> answers;
-
+    Answer aIncorr;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,9 +91,7 @@ public class MainActivity extends MenuActivity {
             final   String CORR_ANSWER = "correct_answer";
             final   String INCORR_ANSWER = "incorrect_answers";
 
-            q = new Question();
-            answers = new ArrayList<>();
-            a = new Answer();
+
 
 
             String question="";
@@ -117,9 +115,13 @@ public class MainActivity extends MenuActivity {
 
 
             JSONObject JSON=null;
-
+            Globals.allQuestions = new ArrayList<>();
             for(int i = 0; i < resultsArray.length(); i++) {
 
+                q = new Question();
+                a = new Answer();
+                answers = new ArrayList<>();
+               // aIncorr= new Answer();
                 try {
                     JSON = resultsArray.getJSONObject(i);
                 } catch (JSONException e) {
@@ -143,17 +145,18 @@ public class MainActivity extends MenuActivity {
                     resultsArray2 = JSON.getJSONArray(INCORR_ANSWER);
 
                     for(int j = 0; j < resultsArray2.length(); j++) {
-                          Answer aIncorr=new Answer();
+                           //aIncorr=new Answer();
                         incorAnswer = Jsoup.parse(resultsArray2.get(j).toString()).text();////////////////Jsoup library
 
                         System.out.println(incorAnswer);
 
-                        aIncorr.answer = incorAnswer;
-                        answers.add(aIncorr);
-                        q.answers=answers;
-                        allQuestions.add(q);
+                        a.answer = incorAnswer;
+                        answers.add(a);
+
                     }
-            //System.out.println(q.question.toString());
+                    q.answers=answers;
+                    allQuestions.add(q);
+            System.out.println(q.question.toString()+allQuestions.size());
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -172,7 +175,7 @@ public class MainActivity extends MenuActivity {
 
 
         //generating numberOfQuestions questions
-        for (int i = 0; i < allQuestions.size(); i++) {System.out.println(allQuestions.get(i).question.toString());
+        for (int i = 0; i < allQuestions.size(); i++) {System.out.println(allQuestions.size()+"    Hereeeeeeeeeeeeeeeeeeeeeeeeee"+allQuestions.get(i).question.toString());
 //            q = new Question();
 //            q.question = "Lorem Ipsum"+(i+1) +" Question?";
 ////            Log.i(TAG, "Q"+ (i+1)+": "+q.question);
@@ -198,7 +201,7 @@ public class MainActivity extends MenuActivity {
             SQLiteDatabase db = dbHelper.getWritableDatabase();
 
             ContentValues values = new ContentValues();
-            values.put("question", allQuestions.get(i).question.toString());
+            values.put("question", allQuestions.get(i).question);
             long rowId = db.insert("questions", null, values);
             Log.i(TAG, "Row number of added question is " + rowId);
 
