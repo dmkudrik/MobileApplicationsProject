@@ -4,88 +4,191 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".QuizActivity"
     android:orientation="vertical"
     android:padding="5dp"
-    >
-    <TextView
-        android:id="@+id/tvEnum"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Question ? of ??!"
-        android:textColor="@color/colorPrimaryDark"
-        android:textSize="20sp"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginBottom="5dp"
-    />
-    <TextView
-        android:id="@+id/tvQuestion"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Ups... Something went wrong ("
-        android:layout_marginBottom="10dp"
-        android:textSize="16dp"
-        />
-    <RadioGroup
-        android:id="@+id/rgAnswers"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="15dp"
+    tools:context=".QuizActivity">
 
-        >
+    <FrameLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:orientation="vertical">
 
-    </RadioGroup>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:weightSum="3"
-        >
-        <Button
-            android:id="@+id/btBack"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/btBack"
-            android:onClick="goBack"
-            android:layout_width="0dp"
-            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tvEnum"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="5dp"
+                android:text="Question ? of ??!"
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="20sp" />
+
+            <!--Ten indicators - radiobuttons-->
+            <LinearLayout
+                android:id="@+id/indicators"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="5dp"
+                android:orientation="horizontal"
+                android:scaleX="0.6"
+                android:scaleY="0.6">
+
+                <RadioButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:buttonTint="@color/colorPrimary"
+                    android:enabled="false" />
+
+                <RadioButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:buttonTint="@color/colorPrimary"
+                    android:enabled="false" />
+
+                <RadioButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:buttonTint="@color/colorPrimary"
+                    android:enabled="false" />
+
+                <RadioButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:buttonTint="@color/colorPrimary"
+                    android:enabled="false" />
+
+                <RadioButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:buttonTint="@color/colorPrimary"
+                    android:enabled="false" />
+
+                <RadioButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:buttonTint="@color/colorPrimary"
+                    android:enabled="false" />
+
+                <RadioButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:buttonTint="@color/colorPrimary"
+                    android:enabled="false" />
+
+                <RadioButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:buttonTint="@color/colorPrimary"
+                    android:enabled="false" />
+
+                <RadioButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:buttonTint="@color/colorPrimary"
+                    android:enabled="false" />
+
+                <RadioButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:buttonTint="@color/colorPrimary"
+                    android:enabled="false" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/tvQuestion"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:text="Ups... Something went wrong ("
+                android:textSize="16dp" />
+
+            <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <RadioGroup
+                    android:id="@+id/rgAnswers"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="15dp">
+
+                </RadioGroup>
+            </ScrollView>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:gravity="bottom"
+            android:orientation="vertical"
             >
-        </Button>
-        <Button
-            android:id="@+id/btConfirm"
-            android:layout_height="wrap_content"
-            android:text="@string/btConfirm"
-            android:onClick="confirm"
-            android:layout_width="0dp"
-            android:layout_weight="1">
-        </Button>
-        <Button
-            android:id="@+id/btForward"
-            android:layout_height="wrap_content"
-            android:text="@string/btForward"
-            android:onClick="goForward"
-            android:layout_width="0dp"
-            android:layout_weight="1">
-        </Button>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="3"
+                >
+            <Button
+                android:id="@+id/btBack"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:onClick="goBack"
+                android:text="@string/btBack"
 
-    </LinearLayout>
+                >
+
+            </Button>
+
+            <Button
+                android:id="@+id/btConfirm"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:onClick="confirm"
+                android:text="@string/btConfirm"></Button>
+
+            <Button
+                android:id="@+id/btForward"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:onClick="goForward"
+                android:text="@string/btForward"></Button>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="visible"
+                >
+
+                <Button
+                    android:id="@+id/btNewQuiz"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:onClick="newQuiz"
+                    android:text="@string/btNewQuiz"></Button>
 
 
+                <Button
+                    android:id="@+id/btEmail"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:onClick="sendEmail"
+                    android:text="@string/btEmail"></Button>
+            </LinearLayout>
+        </LinearLayout>
 
-    <Button
-        android:id="@+id/btNewQuiz"
-        android:layout_height="wrap_content"
-        android:text="@string/btNewQuiz"
-        android:onClick="newQuiz"
-        android:layout_width="match_parent"
-        >
-    </Button>
+
+    </FrameLayout>
 
 
-    <Button
-        android:id="@+id/btEmail"
-        android:layout_height="wrap_content"
-        android:text="@string/btEmail"
-        android:onClick="sendEmail"
-        android:layout_width="fill_parent">
-    </Button>
 </LinearLayout>
