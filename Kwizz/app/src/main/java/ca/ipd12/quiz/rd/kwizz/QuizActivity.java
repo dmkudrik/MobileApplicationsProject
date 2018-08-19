@@ -44,7 +44,7 @@ public class QuizActivity extends MenuActivity {
     Handler mHandler = new Handler();
     ActionBar actionBar;
     Runnable runnable;
-    Boolean counter = false;
+    Boolean counter = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,7 +58,6 @@ public class QuizActivity extends MenuActivity {
         //Start new thread to calculate time
         actionBar = getSupportActionBar();
 
-        Globals.isRunning=true;
         runnable = new Runnable() {
             int num3 = 0;
             private Boolean stop = false;

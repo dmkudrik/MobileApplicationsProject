@@ -248,6 +248,7 @@ public class MainActivity extends MenuActivity {
 
 
     public void openQuiz(View view) {
+        Globals.isRunning=true;
         Intent myIntent = new Intent(MainActivity.this, QuizActivity.class);
 //        myIntent.putExtra("key", value); //Optional parameters
         MainActivity.this.startActivity(myIntent);
