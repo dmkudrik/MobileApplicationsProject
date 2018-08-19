@@ -4,19 +4,20 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context=".ResultActivity">
+    tools:context=".HistoryActivity"
+    android:orientation="vertical">
 
     <TextView
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Quiz results"
+        android:text="Kwizz history"
+        android:layout_gravity="center_horizontal"
+        android:textSize="25dp"
         />
 
     <android.support.v7.widget.RecyclerView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/rc_view_result"
+        android:id="@+id/rc_view_history"
         ></android.support.v7.widget.RecyclerView>
-
 </LinearLayout>

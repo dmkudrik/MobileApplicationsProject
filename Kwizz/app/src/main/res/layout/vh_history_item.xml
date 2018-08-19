@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/vh_result_item"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
-
+    android:layout_height="wrap_content"
+    android:id="@+id/vhh_history_item">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -14,11 +13,11 @@
         android:padding="4dp">
 
         <ImageView
-            android:id="@+id/vh_ok_icon"
+            android:id="@+id/vhh_star"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:src="@drawable/ok"
+            android:src="@drawable/star"
             android:layout_margin="5dp"
             />
 
@@ -30,25 +29,24 @@
             android:layout_marginBottom="2dp"
             >
             <TextView
-                android:id="@+id/vh_tv_question"
+                android:id="@+id/vhh_user"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textStyle="bold"
-                android:textSize="16sp"/>
+                android:textSize="17sp"/>
             <TextView
-                android:id="@+id/vh_tv_correct"
+                android:id="@+id/vhh_result"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="@color/colorCorrect"
-                android:textSize="16sp"/>
+                android:textSize="17sp"/>
             <TextView
-                android:id="@+id/vh_tv_answered"
+                android:id="@+id/vhh_time"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="@color/colorAccent"
-                android:textSize="16sp"/>
+                android:textSize="17sp"/>
         </LinearLayout>
 
     </LinearLayout>
-
 </FrameLayout>

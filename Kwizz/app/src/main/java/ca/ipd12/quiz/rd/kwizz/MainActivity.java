@@ -253,6 +253,8 @@ public class MainActivity extends MenuActivity {
     }
 
     public void showScores(View view) {
+        Intent myIntent = new Intent(MainActivity.this, HistoryActivity.class);
+        MainActivity.this.startActivity(myIntent);
     }
 
 

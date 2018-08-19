@@ -5,4 +5,7 @@
     <color name="colorAccent">#FF4081</color>
     <color name="colorSuccess">#00dd00</color>
     <color name="colorCurrent">#9fa9f1</color>
+    <color name="colorCorrect">#1d5902</color>
+    <color name="colorTransparent">#00000000</color>
+    <color name="colorBlack">#000000</color>
 </resources>

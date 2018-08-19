@@ -1,6 +1,8 @@
 package ca.ipd12.quiz.rd.kwizz;
 
+import android.content.ContentValues;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
@@ -45,6 +47,8 @@ public class QuizActivity extends MenuActivity {
         questionManager();
     }
 
+
+    //Formatting 10 small question indicators
     private void setIndicators() {
         //
         LinearLayout ll = findViewById(R.id.indicators);
@@ -79,6 +83,7 @@ public class QuizActivity extends MenuActivity {
         });
     }
 
+    //Shows a question OR Load and Show in case quiz just started
     protected void questionManager(){
         if(currentQuestionNumber==-1) {
             Globals.allQuestions = getAllQuestions(); //load questions from SQLite
@@ -207,12 +212,29 @@ public class QuizActivity extends MenuActivity {
             if (confirmedAnswers==10){
                 //show the results
                 showResults();
+                Toast.makeText(QuizActivity.this, "Quiz is done!", Toast.LENGTH_SHORT).show();
+                //saveResults to DB
+                addToHistory();
+                openResultDetails();
             }else{
                 //show the next question
                 goForward(view);
             }
 
         }
+    }
+
+    private void addToHistory() {
+        //Save question into db - transaction
+        MyDbHelper dbHelper = new MyDbHelper(this, "kwizzdb", null, Globals.VER);
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put("email", "john@mail.ca");
+        values.put("result", "737");
+        long rowId = db.insert("history", null, values);
+
+        Log.i(TAG, "Result was added to the History");
     }
 
     private void showResults() {
@@ -277,7 +299,10 @@ public class QuizActivity extends MenuActivity {
         addQuestion(Globals.currentQuestionNumber); // 1 - show number + text + answers for the first question
     }
 
-
-
+    private void openResultDetails(){
+        Intent myIntent = new Intent(QuizActivity.this, ResultActivity.class);
+//      myIntent.putExtra("key", value); //Optional parameters
+        QuizActivity.this.startActivity(myIntent);
+    }
 
 }
