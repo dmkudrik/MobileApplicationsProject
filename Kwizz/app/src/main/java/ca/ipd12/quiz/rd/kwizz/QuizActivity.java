@@ -27,6 +27,7 @@ import static ca.ipd12.quiz.rd.kwizz.Globals.VER;
 import static ca.ipd12.quiz.rd.kwizz.Globals.confirmedAnswers;
 import static ca.ipd12.quiz.rd.kwizz.Globals.currentQuestionNumber;
 import static ca.ipd12.quiz.rd.kwizz.Globals.currentQuestions;
+import static ca.ipd12.quiz.rd.kwizz.Globals.currentQuizIsDone;
 import static ca.ipd12.quiz.rd.kwizz.Globals.isRunning;
 import static ca.ipd12.quiz.rd.kwizz.Globals.kwizzTime;
 
@@ -36,15 +37,12 @@ public class QuizActivity extends MenuActivity {
     RadioGroup rg;
     TextView tv;
     Button bt;
-    boolean isDone = false;
+
     RadioButton [] rbb = new RadioButton[10]; //array of questions indicators
-
-    int num1=0,num2=0;
-
     Handler mHandler = new Handler();
     ActionBar actionBar;
     Runnable runnable;
-    Boolean counter = true;
+    volatile boolean afterPause = false; //to manage time counting inside this Activity
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,28 +50,44 @@ public class QuizActivity extends MenuActivity {
         setContentView(R.layout.activity_quiz);
 
         setIndicators(); //set rbb - array of questions indicators
-        addAnswersListener();//adding RadioGroup listener
+        addAnswersListeners();//adding RadioGroup listener
         questionManager();
 
-        //Start new thread to calculate time
-        actionBar = getSupportActionBar();
+    }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        //Run time counter
+        isRunning = true; //initial start or come back from another Activity/Inactivity
+        afterPause=false; //to start again after pause in the current activity
+        secCounter();
+    }
+
+    public void secCounter(){
+        actionBar = getSupportActionBar();
+        //Start new thread to calculate time
         runnable = new Runnable() {
             int num3 = 0;
             private Boolean stop = false;
             @Override
             public void run() {
                 {
-                    counter=true;
-                    actionBar.setTitle("Kwizz : "+ kwizzTime + " sec");
-                    kwizzTime++;
-                    num3++;
-                    Log.i(TAG,num3+"");
-                    if (Globals.isRunning)
-                    {
-                        mHandler.postDelayed(this, 1000);
-                    }else{
+                    if(afterPause || !isRunning) {
                         this.stop=true;
+                    }
+                    else{
+                        actionBar.setTitle("Kwizz : "+ kwizzTime + " sec");
+                        kwizzTime++;
+                        num3++;
+                        Log.i(TAG,num3+" - stopwatch thread");
+                        if (Globals.isRunning)
+                        {
+                            mHandler.postDelayed(this, 1000);
+                        }else{
+                            this.stop=true;
+                        }
                     }
                 }
             }
@@ -87,10 +101,19 @@ public class QuizActivity extends MenuActivity {
         mHandler.post(runnable);
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        //kill the seconds counter
+        //isRunning=false;
+        afterPause=true;
+
+    }
 
     //Formatting 10 small question indicators
     private void setIndicators() {
         //
+
         LinearLayout ll = findViewById(R.id.indicators);
         for (int i =0; i<10;i++ ){
             rbb[i]= (RadioButton) ll.getChildAt(i);
@@ -108,7 +131,8 @@ public class QuizActivity extends MenuActivity {
     }
 
     //user checked a answer-radiobutton - event listener
-    private void addAnswersListener() {
+    private void addAnswersListeners() {
+        // Aanswers-radiobuttons listener
         rg = (RadioGroup) findViewById(R.id.rgAnswers);
         rg.clearCheck();
         rg.setOnCheckedChangeListener(new  RadioGroup.OnCheckedChangeListener() {
@@ -188,7 +212,7 @@ public class QuizActivity extends MenuActivity {
     }
 
     //Add answers for the current question to the layout
-    public void addQuestion(int currQN){ //current Question Number
+    public void addQuestion(int currQN){ //currQN - current Question Number
 
         //show enumeration
         tv = findViewById(R.id.tvEnum);
@@ -251,6 +275,7 @@ public class QuizActivity extends MenuActivity {
             rbb[currentQuestionNumber].setChecked(true);
             if (confirmedAnswers==10){
                 //show the results
+                currentQuizIsDone=true;
                 showResults();
                 Toast.makeText(QuizActivity.this, "Quiz is done!", Toast.LENGTH_SHORT).show();
                 //saveResults to DB
@@ -326,18 +351,40 @@ public class QuizActivity extends MenuActivity {
 
     //If there are confirmed answers, ask for confirmation
     public void newQuiz(View view) {
+        //Confirmation dialog listener
+        DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+                switch (which){
+                    case DialogInterface.BUTTON_POSITIVE:
+                        //Resume time counting and start new quiz
+                        afterPause=false;
+                        secCounter();
+                        startNewQuiz();
+                        break;
+
+                    case DialogInterface.BUTTON_NEGATIVE:
+                        //Resume time counting and continue current quiz
+                        afterPause=false;
+                        secCounter();
+                        break;
+                }
+            }
+        };
+
         if(confirmedAnswers>0 && confirmedAnswers<9 ){
+            //Stop time counting
+            afterPause=true;
             //Show confirmation dialog
-            new AlertDialog.Builder(this)
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder
                     .setTitle("Start a new quiz?")
-                    .setMessage("Press 'Ok' to begin a new quiz or 'Cancel' to continue.")
-                    .setIcon(android.R.drawable.ic_dialog_alert)
-                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int whichButton) {
-                            startNewQuiz(); //confirmed!
-                        }})
-                    .setNegativeButton(android.R.string.no, null).show();
-            return; // Continue current quiz
+                    .setMessage("You already have have answered question(s) in the current quiz.")
+                    .setIcon(android.R.drawable.ic_dialog_info)
+                    .setPositiveButton("Yes", dialogClickListener)
+                    .setNegativeButton("No", dialogClickListener)
+                    .show();
         }else{
             startNewQuiz();
         }
