@@ -6,6 +6,11 @@ public class Globals {
     public static final int VER = 26;
     public static final String TAG = "kwizzz";
 
+    //Spent time to solve quiz - in seconds
+    public static int kwizzTime = 0;
+    //To check whether quiz is running or not
+    public static boolean isRunning = false;
+
 
     public static int currentQuestionNumber = -1;
     public static int confirmedAnswers = 0;

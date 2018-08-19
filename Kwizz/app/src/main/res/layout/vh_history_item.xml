@@ -6,25 +6,17 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:weightSum="8"
+        android:weightSum="10"
         android:orientation="horizontal"
         android:background="@drawable/border"
         android:layout_margin="6dp"
-        android:padding="4dp">
-
-        <ImageView
-            android:id="@+id/vhh_star"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:src="@drawable/star"
-            android:layout_margin="5dp"
-            />
+        android:paddingLeft="8dp"
+        android:paddingTop="8dp">
 
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="7"
+            android:layout_weight="8"
             android:orientation="vertical"
             android:layout_marginBottom="2dp"
             >
@@ -34,19 +26,31 @@
                 android:layout_height="wrap_content"
                 android:textStyle="bold"
                 android:textSize="17sp"/>
-            <TextView
-                android:id="@+id/vhh_result"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textColor="@color/colorCorrect"
-                android:textSize="17sp"/>
+
             <TextView
                 android:id="@+id/vhh_time"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="@color/colorAccent"
                 android:textSize="17sp"/>
-        </LinearLayout>
+            <ImageView
+                android:id="@+id/vhh_star"
 
+                android:layout_width="160dp"
+                android:layout_height="wrap_content"
+                android:src="@drawable/star"
+                />
+        </LinearLayout>
+        <TextView
+            android:id="@+id/vhh_result"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorPrimaryDark"
+            android:textSize="22sp"
+            android:layout_weight="2"
+            android:layout_margin="3dp"
+            android:layout_gravity="center_vertical"
+            android:textStyle="bold"
+            />
     </LinearLayout>
 </FrameLayout>

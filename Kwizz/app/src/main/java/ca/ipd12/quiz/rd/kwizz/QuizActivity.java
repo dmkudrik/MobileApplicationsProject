@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
+import android.os.Handler;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -20,12 +22,13 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Collections;
-
 import static ca.ipd12.quiz.rd.kwizz.Globals.TAG;
 import static ca.ipd12.quiz.rd.kwizz.Globals.VER;
 import static ca.ipd12.quiz.rd.kwizz.Globals.confirmedAnswers;
 import static ca.ipd12.quiz.rd.kwizz.Globals.currentQuestionNumber;
 import static ca.ipd12.quiz.rd.kwizz.Globals.currentQuestions;
+import static ca.ipd12.quiz.rd.kwizz.Globals.isRunning;
+import static ca.ipd12.quiz.rd.kwizz.Globals.kwizzTime;
 
 public class QuizActivity extends MenuActivity {
 
@@ -36,6 +39,12 @@ public class QuizActivity extends MenuActivity {
     boolean isDone = false;
     RadioButton [] rbb = new RadioButton[10]; //array of questions indicators
 
+    int num1=0,num2=0;
+
+    Handler mHandler = new Handler();
+    ActionBar actionBar;
+    Runnable runnable;
+    Boolean counter = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +54,38 @@ public class QuizActivity extends MenuActivity {
         setIndicators(); //set rbb - array of questions indicators
         addAnswersListener();//adding RadioGroup listener
         questionManager();
+
+        //Start new thread to calculate time
+        actionBar = getSupportActionBar();
+
+        Globals.isRunning=true;
+        runnable = new Runnable() {
+            int num3 = 0;
+            private Boolean stop = false;
+            @Override
+            public void run() {
+                {
+                    counter=true;
+                    actionBar.setTitle("Kwizz : "+ kwizzTime + " sec");
+                    kwizzTime++;
+                    num3++;
+                    Log.i(TAG,num3+"");
+                    if (Globals.isRunning)
+                    {
+                        mHandler.postDelayed(this, 1000);
+                    }else{
+                        this.stop=true;
+                    }
+                }
+            }
+            public Boolean getStop() {
+                return stop;
+            }
+            public void setStop(Boolean stop) {
+                this.stop = stop;
+            }
+        };
+        mHandler.post(runnable);
     }
 
 
@@ -220,23 +261,40 @@ public class QuizActivity extends MenuActivity {
                 //show the next question
                 goForward(view);
             }
-
         }
     }
 
+    //Saves a result to the DB
     private void addToHistory() {
         //Save question into db - transaction
         MyDbHelper dbHelper = new MyDbHelper(this, "kwizzdb", null, Globals.VER);
         SQLiteDatabase db = dbHelper.getWritableDatabase();
 
+        //Calculating ranking
+        int rightAnswers = 0;
+        int weightSum=0;
+        int weight=0;
+        Question q;
+        for(int i = 0;i<10;i++ ){
+            q = currentQuestions.get(i);
+            weightSum+=q.answers.size();
+            if(q.checkedAnswer==q.getCorrectAnswer()) {
+                rightAnswers++;
+                weight+=q.answers.size();
+            }
+        }
+        double result = 1000*((weight*1.0)/weightSum);
+        rightAnswers = Integer.parseInt(String.format("%.0f", result));
+
         ContentValues values = new ContentValues();
         values.put("email", "john@mail.ca");
-        values.put("result", "737");
+        values.put("result", rightAnswers);
         long rowId = db.insert("history", null, values);
 
         Log.i(TAG, "Result was added to the History");
     }
 
+    //Set questions indicators by quiz results
     private void showResults() {
         for(int i = 0; i<10;i++){
             Question q = currentQuestions.get(i);
@@ -296,6 +354,7 @@ public class QuizActivity extends MenuActivity {
         setCurrentQuestions(); //get new 10 random questions
         currentQuestionNumber=0;
         confirmedAnswers=0;
+        kwizzTime=0;
         addQuestion(Globals.currentQuestionNumber); // 1 - show number + text + answers for the first question
     }
 

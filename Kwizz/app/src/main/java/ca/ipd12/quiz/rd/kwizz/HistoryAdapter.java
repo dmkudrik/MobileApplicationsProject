@@ -32,9 +32,21 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.OneItemV
     @Override
     public void onBindViewHolder(@NonNull OneItemViewHolder oneItemViewHolder, final int i) {
         oneItemViewHolder.tvUser.setText(historyItems.get(i).email);
-        oneItemViewHolder.tvResult.setText(historyItems.get(i).result);
-        oneItemViewHolder.tvTime.setText(historyItems.get(i).result);
-        oneItemViewHolder.ivStar.setImageResource(R.drawable.star);
+        oneItemViewHolder.tvResult.setText(historyItems.get(i).getResult());
+        oneItemViewHolder.tvTime.setText(historyItems.get(i).result+"");
+        double r= historyItems.get(i).result;
+        if(r>950) oneItemViewHolder.ivStar.setImageResource(R.drawable.star10);
+        else if(r>850) oneItemViewHolder.ivStar.setImageResource(R.drawable.star9);
+        else if(r>750) oneItemViewHolder.ivStar.setImageResource(R.drawable.star8);
+        else if(r>650) oneItemViewHolder.ivStar.setImageResource(R.drawable.star7);
+        else if(r>550) oneItemViewHolder.ivStar.setImageResource(R.drawable.star6);
+        else if(r>450) oneItemViewHolder.ivStar.setImageResource(R.drawable.star5);
+        else if(r>350) oneItemViewHolder.ivStar.setImageResource(R.drawable.star4);
+        else if(r>250) oneItemViewHolder.ivStar.setImageResource(R.drawable.star3);
+        else if(r>150) oneItemViewHolder.ivStar.setImageResource(R.drawable.star2);
+        else if(r>50) oneItemViewHolder.ivStar.setImageResource(R.drawable.star1);
+        else oneItemViewHolder.ivStar.setImageResource(R.drawable.star0);
+
 
 
         oneItemViewHolder.singleParentLayout2.setOnClickListener(new View.OnClickListener() {

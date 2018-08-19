@@ -36,6 +36,9 @@ public class ResultAdapter extends RecyclerView.Adapter<ResultAdapter.OneItemVie
             oneItemViewHolder.tvAnswer.setText("Your answer: " + q.answers.get(q.checkedAnswer).answer);
             oneItemViewHolder.ivOk.setImageResource(R.drawable.no);
         }
+        else{
+            oneItemViewHolder.tvAnswer.setVisibility(View.GONE);
+        }
 
         oneItemViewHolder.singleParentLayout.setOnClickListener(new View.OnClickListener() {
             @Override

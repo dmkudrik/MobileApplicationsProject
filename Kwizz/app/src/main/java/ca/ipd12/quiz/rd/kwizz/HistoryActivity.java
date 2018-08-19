@@ -38,7 +38,7 @@ public class HistoryActivity extends MenuActivity {
         while (cursor.moveToNext()){
             hi = new HistoryItem();
             hi.email = cursor.getString(0);
-            hi.result = cursor.getString(1);
+            hi.result = cursor.getDouble(1);
             //hi.resultTime = cursor.getString(4);
             historyItems.add(hi);
 

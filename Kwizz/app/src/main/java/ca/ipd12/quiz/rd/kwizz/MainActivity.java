@@ -47,6 +47,7 @@ public class MainActivity extends MenuActivity {
         setContentView(R.layout.activity_main);
         Stetho.initializeWithDefaults(this); // Stetho
         getData();
+        Globals.isRunning=false;
         //quizGenerator();
         //fetcher();
     }
