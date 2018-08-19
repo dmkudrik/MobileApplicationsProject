@@ -13,9 +13,13 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.OneItemViewHolder> {
-    HistoryAdapter(){
+import java.util.ArrayList;
 
+
+public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.OneItemViewHolder> {
+    ArrayList<HistoryItem> historyItems = new ArrayList<>();
+    HistoryAdapter(ArrayList<HistoryItem> hItems){
+        historyItems = hItems;
     }
     @NonNull
     @Override
@@ -27,9 +31,9 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.OneItemV
 
     @Override
     public void onBindViewHolder(@NonNull OneItemViewHolder oneItemViewHolder, final int i) {
-        oneItemViewHolder.tvUser.setText("USER NAME");
-        oneItemViewHolder.tvResult.setText("SCORE RESULT");
-        oneItemViewHolder.tvTime.setText("TIME RESULT");
+        oneItemViewHolder.tvUser.setText(historyItems.get(i).email);
+        oneItemViewHolder.tvResult.setText(historyItems.get(i).result);
+        oneItemViewHolder.tvTime.setText(historyItems.get(i).result);
         oneItemViewHolder.ivStar.setImageResource(R.drawable.star);
 
 
@@ -42,7 +46,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.OneItemV
 
     @Override
     public int getItemCount() {
-        return 10;
+        return historyItems.size();
     }
 
 //    public void setNewData(String[] newStrings) {

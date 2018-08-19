@@ -152,7 +152,7 @@ public class QuizActivity extends MenuActivity {
 
         //show enumeration
         tv = findViewById(R.id.tvEnum);
-        tv.setText("Question " + (currQN + 1) + " of 10!" + "confirmed - " + confirmedAnswers);
+        tv.setText("Question " + (currQN + 1) + " of 10!");
 
         //show question
         tv = findViewById(R.id.tvQuestion);
