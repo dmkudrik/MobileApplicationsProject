@@ -28,13 +28,7 @@
         android:onClick="openQuiz"
         android:layout_width="fill_parent">
     </Button>
-    <Button
-        android:id="@+id/get"
-        android:layout_height="wrap_content"
-        android:text="getData(temporary)"
-        android:onClick="getData"
-        android:layout_width="fill_parent">
-    </Button>
+
     <Button
         android:id="@+id/btScores"
         android:layout_height="wrap_content"

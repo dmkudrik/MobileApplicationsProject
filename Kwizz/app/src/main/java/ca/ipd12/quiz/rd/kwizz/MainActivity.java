@@ -39,21 +39,22 @@ public class MainActivity extends MenuActivity {
     int maxAnswers = 5;
     ArrayList<Answer> answers;
     Answer aIncorr;
+    int NOQ=10;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Stetho.initializeWithDefaults(this); // Stetho
-
+        getData();
         //quizGenerator();
         //fetcher();
     }
-    public void getData(View view){
+    public void getData(){
 
         URL apiURL;
         try{
-            apiURL= new URL("https://opentdb.com/api.php?amount="+Globals.VER);
+            apiURL= new URL("https://opentdb.com/api.php?amount="+NOQ);
             new FetchDataFromApi().execute(apiURL);
         }
         catch (MalformedURLException e){
@@ -99,7 +100,7 @@ public class MainActivity extends MenuActivity {
             String incorAnswer="";
 
             JSONObject Json = null;
-            JSONObject Json2 = null;
+
             try {
                 Json = new JSONObject(s);
             } catch (JSONException e) {
@@ -136,7 +137,7 @@ public class MainActivity extends MenuActivity {
 
 
                     corAnswer= Jsoup.parse(JSON.getString(CORR_ANSWER)).text();////////////////Jsoup library
-                    System.out.println(corAnswer);
+
                     a.answer=corAnswer;
                     a.isCorrect=true;
 
@@ -145,18 +146,18 @@ public class MainActivity extends MenuActivity {
                     resultsArray2 = JSON.getJSONArray(INCORR_ANSWER);
 
                     for(int j = 0; j < resultsArray2.length(); j++) {
-                           //aIncorr=new Answer();
+                           aIncorr=new Answer();
                         incorAnswer = Jsoup.parse(resultsArray2.get(j).toString()).text();////////////////Jsoup library
 
-                        System.out.println(incorAnswer);
 
-                        a.answer = incorAnswer;
-                        answers.add(a);
 
+                        aIncorr.answer = incorAnswer;
+                        answers.add(aIncorr);
+                        //System.out.println( incorAnswer);
                     }
                     q.answers=answers;
                     allQuestions.add(q);
-            System.out.println(q.question.toString()+allQuestions.size());
+
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -175,7 +176,7 @@ public class MainActivity extends MenuActivity {
 
 
         //generating numberOfQuestions questions
-        for (int i = 0; i < allQuestions.size(); i++) {System.out.println(allQuestions.size()+"    Hereeeeeeeeeeeeeeeeeeeeeeeeee"+allQuestions.get(i).question.toString());
+        for (int i = 0; i < allQuestions.size(); i++) {
 //            q = new Question();
 //            q.question = "Lorem Ipsum"+(i+1) +" Question?";
 ////            Log.i(TAG, "Q"+ (i+1)+": "+q.question);
@@ -205,11 +206,12 @@ public class MainActivity extends MenuActivity {
             long rowId = db.insert("questions", null, values);
             Log.i(TAG, "Row number of added question is " + rowId);
 
-            for (int ans = 0; ans < allQuestions.get(i).answers.size(); ans++) {
+            for (int j = 0; j < allQuestions.get(i).answers.size(); j++) {
+                System.out.println(allQuestions.get(i).answers.size()+"    Hereeeeeeeeeeeeeeeeeeeeeeeeee"+allQuestions.get(i).answers.get(j).answer);
                 ContentValues values2 = new ContentValues();
                 values2.put("qid", rowId);
-                values2.put("answer", (allQuestions.get(i).answers.get(ans).answer));
-                values2.put("iscorrect", (allQuestions.get(i).answers.get(ans).isCorrect));
+                values2.put("answer", (allQuestions.get(i).answers.get(j).answer));
+                values2.put("iscorrect", (allQuestions.get(i).answers.get(j).isCorrect));
                 long rowId2 = db.insert("answers", null, values2);
                 Log.i(TAG, "Row number of added answer is " + rowId2);
             }
