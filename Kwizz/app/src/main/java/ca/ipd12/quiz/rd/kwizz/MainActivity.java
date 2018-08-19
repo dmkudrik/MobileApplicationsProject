@@ -1,5 +1,6 @@
 package ca.ipd12.quiz.rd.kwizz;
 
+import android.widget.Button;
 import org.jsoup.Jsoup;
 import android.content.ContentValues;
 import android.content.Intent;
@@ -10,6 +11,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -29,6 +31,8 @@ import java.util.concurrent.ThreadLocalRandom;
 import static ca.ipd12.quiz.rd.kwizz.Globals.TAG;
 import static ca.ipd12.quiz.rd.kwizz.Globals.VER;
 import static ca.ipd12.quiz.rd.kwizz.Globals.allQuestions;
+import static ca.ipd12.quiz.rd.kwizz.Globals.NOQ;
+import static ca.ipd12.quiz.rd.kwizz.Globals.isLoggedIn;
 
 public class MainActivity extends MenuActivity {
     Question q;
@@ -39,17 +43,31 @@ public class MainActivity extends MenuActivity {
     int maxAnswers = 5;
     ArrayList<Answer> answers;
     Answer aIncorr;
-    int NOQ=10;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Stetho.initializeWithDefaults(this); // Stetho
-        getData();
+
         Globals.isRunning=false;
+
+        if(!isLoggedIn) {
+            getData();
+
+            //setting the visibility of buttons to 'gone' if not logged in
+            View btGo = findViewById(R.id.btGo);
+            btGo.setVisibility(View.GONE);
+
+            View btScores = findViewById(R.id.btScores);
+            btScores.setVisibility(View.GONE);
+
+
+        }
         //quizGenerator();
         //fetcher();
+
     }
     public void getData(){
 
@@ -80,14 +98,16 @@ public class MainActivity extends MenuActivity {
         @Override
         protected  void  onPostExecute (String s){
             // super.onPostExecute(s);
-           // TextView tv = findViewById(R.id.tvResult);
+
 
            getDataFromJSON(s);
             quizGenerator();
             fetcher();
-            //tv.setText(question);
+
         }
+        //this method converts JSON to strings and puts data to our objects
         private void getDataFromJSON(String s) {
+            //string titles in the JSON
             final   String RESULTS = "results";
             final   String QUESTION = "question";
             final   String CORR_ANSWER = "correct_answer";
@@ -116,7 +136,7 @@ public class MainActivity extends MenuActivity {
 
 
 
-            JSONObject JSON=null;
+            JSONObject Json2=null;
             Globals.allQuestions = new ArrayList<>();
             for(int i = 0; i < resultsArray.length(); i++) {
 
@@ -125,7 +145,7 @@ public class MainActivity extends MenuActivity {
                 answers = new ArrayList<>();
                // aIncorr= new Answer();
                 try {
-                    JSON = resultsArray.getJSONObject(i);
+                    Json2 = resultsArray.getJSONObject(i);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -133,28 +153,28 @@ public class MainActivity extends MenuActivity {
 
                 JSONArray resultsArray2;
                 try {
-                    question = Jsoup.parse(JSON.getString(QUESTION)).text();////////////////Jsoup library
-                    q.question = question;
+                    question = Jsoup.parse(Json2.getString(QUESTION)).text();//using Jsoup library
+                    q.question = question;//adding data to question object
 
 
-                    corAnswer= Jsoup.parse(JSON.getString(CORR_ANSWER)).text();////////////////Jsoup library
+                    corAnswer= Jsoup.parse(Json2.getString(CORR_ANSWER)).text();//using Jsoup library
 
-                    a.answer=corAnswer;
+                    a.answer=corAnswer;//adding data to answer object
                     a.isCorrect=true;
 
 
-                    answers.add(a);
-                    resultsArray2 = JSON.getJSONArray(INCORR_ANSWER);
+                    answers.add(a);//adding answer to answers list
+                    resultsArray2 = Json2.getJSONArray(INCORR_ANSWER);
 
                     for(int j = 0; j < resultsArray2.length(); j++) {
                            aIncorr=new Answer();
-                        incorAnswer = Jsoup.parse(resultsArray2.get(j).toString()).text();////////////////Jsoup library
+                        incorAnswer = Jsoup.parse(resultsArray2.get(j).toString()).text();//using Jsoup library
 
 
 
                         aIncorr.answer = incorAnswer;
-                        answers.add(aIncorr);
-                        //System.out.println( incorAnswer);
+                        answers.add(aIncorr);//adding answer to answers list
+
                     }
                     q.answers=answers;
                     allQuestions.add(q);
@@ -208,7 +228,7 @@ public class MainActivity extends MenuActivity {
             Log.i(TAG, "Row number of added question is " + rowId);
 
             for (int j = 0; j < allQuestions.get(i).answers.size(); j++) {
-                System.out.println(allQuestions.get(i).answers.size()+"    Hereeeeeeeeeeeeeeeeeeeeeeeeee"+allQuestions.get(i).answers.get(j).answer);
+
                 ContentValues values2 = new ContentValues();
                 values2.put("qid", rowId);
                 values2.put("answer", (allQuestions.get(i).answers.get(j).answer));
@@ -258,6 +278,40 @@ public class MainActivity extends MenuActivity {
         Intent myIntent = new Intent(MainActivity.this, HistoryActivity.class);
         MainActivity.this.startActivity(myIntent);
     }
+    //the onClick listener for Login button
+    public void login(View view) {
+        if(!isLoggedIn) {//if not logged in
 
+
+            EditText emailField = (EditText) findViewById(R.id.tbEmail);
+            Globals.userEmail = emailField.getText().toString();
+            if (Globals.userEmail.isEmpty()) {
+                Toast.makeText(MainActivity.this,
+                        "Please enter email.", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            isLoggedIn = true;
+            //when logged in setting the visibility of the buttons to true
+            View btGo = findViewById(R.id.btGo);
+            btGo.setVisibility(View.VISIBLE);
+
+            View btScores = findViewById(R.id.btScores);
+            btScores.setVisibility(View.VISIBLE);
+            //turning login button to logout
+            Button btLogin = findViewById(R.id.btLogin);
+            btLogin.setText("Log Out");
+        }else {
+            isLoggedIn = false;
+            View btGo = findViewById(R.id.btGo);
+            btGo.setVisibility(View.GONE);
+
+            View btScores = findViewById(R.id.btScores);
+            btScores.setVisibility(View.GONE);
+
+            Button btLogin = findViewById(R.id.btLogin);
+            btLogin.setText("Log In");
+        }
+
+    }
 
 }

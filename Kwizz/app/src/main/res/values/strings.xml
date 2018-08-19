@@ -6,11 +6,15 @@
     <string name="goHome">Home page</string>
     <string name="goAbout">About</string>
     <string name="goScores">History</string>
+    <string name="goLogout">Log Out</string>
+
+
 
     <!--First Page-->
     <string name="tbEmail">Enter your email</string>
     <string name="btGo">Start quiz</string>
     <string name="btScores">History</string>
+    <string name="btLogin">Log In</string>
 
     <!--Quiz Activity-->
     <string name="btBack">Previous</string>

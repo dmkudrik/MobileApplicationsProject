@@ -17,4 +17,8 @@
         android:title="@string/goAbout"
         android:orderInCategory="4"
         ></item>
+    <item android:id="@+id/miLogout"
+        android:title="@string/goLogout"
+        android:orderInCategory="4"
+        ></item>
 </menu>

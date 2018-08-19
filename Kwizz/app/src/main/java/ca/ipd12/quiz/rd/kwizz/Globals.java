@@ -3,6 +3,11 @@ package ca.ipd12.quiz.rd.kwizz;
 import java.util.ArrayList;
 
 public class Globals {
+    public static String userEmail;//to identify current user
+    public  static boolean isLoggedIn=false;//flag
+
+
+    public static int NOQ=10;
     public static final int VER = 26;//DB version
     public static final String TAG = "kwizzz";//Debugging tag
 
@@ -17,7 +22,7 @@ public class Globals {
 
     public static int currentQuestionNumber = -1;
     public static int confirmedAnswers = 0;
-    public static ArrayList<Question> allQuestions;
+    public static ArrayList<Question> allQuestions;//load from API
     public static ArrayList<Question> currentQuestions= new ArrayList<>();
 
 }
