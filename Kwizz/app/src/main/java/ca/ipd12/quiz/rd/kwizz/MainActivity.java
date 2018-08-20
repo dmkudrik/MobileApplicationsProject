@@ -343,9 +343,13 @@ public class MainActivity extends MenuActivity {
 
             //when logged in setting the visibility of the buttons to true
             View btGo = findViewById(R.id.btGo);
-            //btGo.setVisibility(View.VISIBLE);
-
+            View btResume = findViewById(R.id.btResume);
             View btScores = findViewById(R.id.btScores);
+
+
+            btGo.setVisibility(View.VISIBLE);
+            btResume.setVisibility(View.VISIBLE);
+
             btScores.setVisibility(View.VISIBLE);
 
 
@@ -360,7 +364,7 @@ public class MainActivity extends MenuActivity {
 
 
             //if else for resume and start new buttond
-            View btResume = findViewById(R.id.btResume);
+
             if(currentQuestionNumber==-1){//if the quiz has not been initiated
 
                 btResume.setEnabled(false);
@@ -371,7 +375,7 @@ public class MainActivity extends MenuActivity {
 
                 btResume.setEnabled(true);
 
-                btGo.setEnabled(false);
+                btGo.setEnabled(true);
             }
 
         }else {
