@@ -24,7 +24,7 @@
             android:parentActivityName=".MainActivity" />
         <activity
             android:name=".ResultActivity"
-            android:parentActivityName=".MainActivity" />
+            android:parentActivityName=".QuizActivity" />
         <activity
             android:name=".HistoryActivity"
             android:parentActivityName=".MainActivity">

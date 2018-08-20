@@ -13,6 +13,8 @@
         android:text="Quiz results"
         android:layout_gravity="center_horizontal"
         android:layout_margin="8dp"
+        android:textStyle="bold"
+        android:textSize="22sp"
         android:textColor="@color/colorPrimaryDark"
         />
     <TextView
@@ -20,6 +22,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Your results"
+        android:textSize="17sp"
         android:layout_margin="5dp"
         />
 
@@ -28,5 +31,11 @@
         android:layout_height="match_parent"
         android:id="@+id/rc_view_result"
         ></android.support.v7.widget.RecyclerView>
+    <!--<Button-->
+        <!--android:id="@+id/btEmail"-->
+        <!--android:layout_width="fill_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:onClick="sendEmail"-->
+        <!--android:text="@string/btEmail"></Button>-->
 
 </LinearLayout>

@@ -175,7 +175,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:onClick="openResult"
-                    android:visibility="gone"
+                    android:enabled="false"
                     android:text="@string/btOpenResult"></Button>
 
                 <Button
@@ -186,12 +186,7 @@
                     android:text="@string/btNewQuiz"></Button>
 
 
-                <Button
-                    android:id="@+id/btEmail"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:onClick="sendEmail"
-                    android:text="@string/btEmail"></Button>
+
             </LinearLayout>
         </LinearLayout>
 

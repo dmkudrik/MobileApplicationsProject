@@ -66,6 +66,8 @@ public class QuizActivity extends MenuActivity {
         super.onResume();
         if(confirmedAnswers==10){
             isRunning=false;
+            Button btr = findViewById(R.id.btResult);
+            btr.setEnabled(true);
         }else{
             isRunning = true; //initial start or come back from another Activity/Inactivity
         }
@@ -107,10 +109,8 @@ public class QuizActivity extends MenuActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        //kill the seconds counter
-        //isRunning=false;
+        //pause stopwatch
         afterPause=true;
-
     }
 
     //Formatting 10 small question indicators
@@ -285,7 +285,7 @@ public class QuizActivity extends MenuActivity {
                 //saveResults to DB
                 addToHistory();
                 Button btr = findViewById(R.id.btResult);
-                btr.setVisibility(View.VISIBLE);
+                btr.setEnabled(true);
                 //openResultDetails();
             }else{
                 //show the next question
@@ -320,7 +320,8 @@ public class QuizActivity extends MenuActivity {
     }
 
     private void calculateRanking() {
-
+        rightAnswers=0;
+        weight=0;weightSum=0;
         for(int i = 0;i<10;i++ ){
             q = currentQuestions.get(i);
             weightSum+=q.answers.size();
@@ -423,16 +424,21 @@ public class QuizActivity extends MenuActivity {
         }
         //changes to Globals
         setCurrentQuestions(); //get new 10 random questions
-        if(confirmedAnswers==10) secCounter();
+        if(confirmedAnswers==10) {
+            isRunning=true;
+            secCounter();
+        }
         currentQuestionNumber=0;
         confirmedAnswers=0;
         kwizzTime=0;
+        Button btr = findViewById(R.id.btResult);
+        btr.setEnabled(false);
         addQuestion(Globals.currentQuestionNumber); // 1 - show number + text + answers for the first question
     }
 
 
     public void openResult(View view) {
-
+        calculateRanking();
         openResultDetails();
     }
 }

@@ -39,15 +39,11 @@ public class MenuActivity extends AppCompatActivity {
 
 
         }
-        else if(selectedItem == R.id.miAbout){
 
-
-        }
         else if(selectedItem == R.id.miLogout){
             Globals.isLoggedIn=false;
             Intent myIntent = new Intent(MenuActivity.this, MainActivity.class);
             MenuActivity.this.startActivity(myIntent);
-
         }
         else {
             return super.onOptionsItemSelected(item);

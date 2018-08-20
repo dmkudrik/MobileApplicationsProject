@@ -4,6 +4,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
 import android.widget.TextView;
 
 public class ResultActivity extends MenuActivity {
@@ -20,7 +21,7 @@ public class ResultActivity extends MenuActivity {
         int points = extras.getInt("points");
         int rightAnswers = extras.getInt("rightAnswers");
 
-        tv.setText("Correct answers: "+ rightAnswers + "/10, " + "Points: " + points +", Done: " +   Globals.kwizzTime + " seconds");
+        tv.setText("Correct answers: "+ rightAnswers + "/10, " + "Points: " + points +", \nDone: " +   Globals.kwizzTime + " seconds");
         initRecyclerView();
     }
 
@@ -32,5 +33,8 @@ public class ResultActivity extends MenuActivity {
         myRecView.setLayoutManager(new LinearLayoutManager(this));
 
 
+    }
+
+    public void sendEmail(View view) {
     }
 }
