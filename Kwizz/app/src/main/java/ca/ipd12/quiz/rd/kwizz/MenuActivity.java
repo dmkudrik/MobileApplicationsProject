@@ -7,9 +7,12 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Random;
+
+import static ca.ipd12.quiz.rd.kwizz.Globals.isLoggedIn;
 
 public class MenuActivity extends AppCompatActivity {
 
@@ -41,7 +44,12 @@ public class MenuActivity extends AppCompatActivity {
         }
 
         else if(selectedItem == R.id.miLogout){
-            Globals.isLoggedIn=false;
+            if(!isLoggedIn) {
+                Toast.makeText(MenuActivity.this,
+                        "Please log in.", Toast.LENGTH_SHORT).show();
+            }
+
+            isLoggedIn=false;
             Intent myIntent = new Intent(MenuActivity.this, MainActivity.class);
             MenuActivity.this.startActivity(myIntent);
         }

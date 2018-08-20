@@ -38,7 +38,15 @@
         android:visibility="gone">
 
     </Button>
+    <Button
+        android:id="@+id/btResume"
+        android:layout_height="wrap_content"
+        android:text="@string/btResume"
+        android:onClick="openQuiz"
+        android:layout_width="fill_parent"
+        android:visibility="gone">
 
+    </Button>
     <Button
         android:id="@+id/btScores"
         android:layout_height="wrap_content"

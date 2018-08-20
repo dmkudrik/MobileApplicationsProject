@@ -10,9 +10,10 @@
 
     <!--First Page-->
     <string name="tbEmail">Enter your email</string>
-    <string name="btGo">Start quiz</string>
+    <string name="btGo">Start new quiz</string>
     <string name="btScores">History</string>
     <string name="btLogin">Log In</string>
+    <string name="btResume">Resume quiz</string>
 
     <!--Quiz Activity-->
     <string name="btBack">Previous</string>

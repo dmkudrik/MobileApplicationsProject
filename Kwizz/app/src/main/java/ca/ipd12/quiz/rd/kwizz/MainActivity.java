@@ -33,6 +33,7 @@ import static ca.ipd12.quiz.rd.kwizz.Globals.VER;
 import static ca.ipd12.quiz.rd.kwizz.Globals.allQuestions;
 import static ca.ipd12.quiz.rd.kwizz.Globals.NOQ;
 import static ca.ipd12.quiz.rd.kwizz.Globals.isLoggedIn;
+import static ca.ipd12.quiz.rd.kwizz.Globals.currentQuestionNumber;
 
 public class MainActivity extends MenuActivity {
     Question q;
@@ -63,8 +64,13 @@ public class MainActivity extends MenuActivity {
             View btScores = findViewById(R.id.btScores);
             btScores.setVisibility(View.GONE);
 
-
+            // setting menu item logout to invisible
+            //View miLogout = findViewById(R.id.miLogout);
+            //miLogout.setEnabled(false);
+            View btResume = findViewById(R.id.btResume);
+            btResume.setVisibility(View.GONE);
         }
+
         //quizGenerator();
         //fetcher();
 
@@ -116,9 +122,9 @@ public class MainActivity extends MenuActivity {
 
 
 
-            String question="";
-            String corAnswer ="";
-            String incorAnswer="";
+            String question;
+            String corAnswer;
+            String incorAnswer;
 
             JSONObject Json = null;
 
@@ -153,11 +159,11 @@ public class MainActivity extends MenuActivity {
 
                 JSONArray resultsArray2;
                 try {
-                    question = Jsoup.parse(Json2.getString(QUESTION)).text();//using Jsoup library
+                    question = Jsoup.parse(Json2.getString(QUESTION)).text();//using Jsoup library to decode special characters
                     q.question = question;//adding data to question object
 
 
-                    corAnswer= Jsoup.parse(Json2.getString(CORR_ANSWER)).text();//using Jsoup library
+                    corAnswer= Jsoup.parse(Json2.getString(CORR_ANSWER)).text();//using Jsoup library to decode special characters
 
                     a.answer=corAnswer;//adding data to answer object
                     a.isCorrect=true;
@@ -168,7 +174,7 @@ public class MainActivity extends MenuActivity {
 
                     for(int j = 0; j < resultsArray2.length(); j++) {
                            aIncorr=new Answer();
-                        incorAnswer = Jsoup.parse(resultsArray2.get(j).toString()).text();//using Jsoup library
+                        incorAnswer = Jsoup.parse(resultsArray2.get(j).toString()).text();//using Jsoup library to decode special characters
 
 
 
@@ -177,7 +183,7 @@ public class MainActivity extends MenuActivity {
 
                     }
                     q.answers=answers;
-                    allQuestions.add(q);
+                    allQuestions.add(q);//adding question to the list
 
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -300,6 +306,10 @@ public class MainActivity extends MenuActivity {
             //turning login button to logout
             Button btLogin = findViewById(R.id.btLogin);
             btLogin.setText("Log Out");
+
+            // setting menu item logout to visible
+           // View miLogout = findViewById(R.id.miLogout);
+            //miLogout.setEnabled(true);
         }else {
             isLoggedIn = false;
             View btGo = findViewById(R.id.btGo);
@@ -311,6 +321,58 @@ public class MainActivity extends MenuActivity {
             Button btLogin = findViewById(R.id.btLogin);
             btLogin.setText("Log In");
         }
+
+    }
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if(isLoggedIn) {
+
+
+            //when logged in setting the visibility of the buttons to true
+            View btGo = findViewById(R.id.btGo);
+            //btGo.setVisibility(View.VISIBLE);
+
+            View btScores = findViewById(R.id.btScores);
+            btScores.setVisibility(View.VISIBLE);
+            //turning login button to logout
+            Button btLogin = findViewById(R.id.btLogin);
+            btLogin.setText("Log Out");
+
+            // setting menu item logout to visible
+            //View miLogout = findViewById(R.id.miLogout);
+            //miLogout.setVisibility(View.VISIBLE);
+
+
+            //if else for resume and start new buttond
+            View btResume = findViewById(R.id.btResume);
+            if(currentQuestionNumber==-1){//if the quiz has not been initiated
+
+                btResume.setVisibility(View.GONE);
+
+
+                btGo.setVisibility(View.VISIBLE);
+            }
+            else{
+
+                btResume.setVisibility(View.VISIBLE);
+
+
+                btGo.setVisibility(View.GONE);
+            }
+
+        }else {
+
+            View btGo = findViewById(R.id.btGo);
+            btGo.setVisibility(View.GONE);
+
+            View btScores = findViewById(R.id.btScores);
+            btScores.setVisibility(View.GONE);
+
+            Button btLogin = findViewById(R.id.btLogin);
+            btLogin.setText("Log In");
+        }
+
 
     }
 
