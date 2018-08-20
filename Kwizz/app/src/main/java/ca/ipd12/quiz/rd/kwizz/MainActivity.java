@@ -283,8 +283,10 @@ public class MainActivity extends MenuActivity {
     //the onClick listener for Login button
     public void login(View view) {
 
-        EditText emailField = (EditText) findViewById(R.id.tbEmail);
-
+        EditText emailField =  findViewById(R.id.tbEmail);
+        View btGo = findViewById(R.id.btGo);
+        View btScores = findViewById(R.id.btScores);
+        View btResume = findViewById(R.id.btResume);
         if(!isLoggedIn) {//if not logged in
 
             Globals.userEmail = emailField.getText().toString();
@@ -295,11 +297,15 @@ public class MainActivity extends MenuActivity {
             }
             isLoggedIn = true;
             //when logged in setting the visibility of the buttons to true
-            View btGo = findViewById(R.id.btGo);
+
             btGo.setVisibility(View.VISIBLE);
 
-            View btScores = findViewById(R.id.btScores);
+
             btScores.setVisibility(View.VISIBLE);
+
+
+            btResume.setVisibility(View.VISIBLE);
+            btResume.setEnabled(false);
             //turning login button to logout
             Button btLogin = findViewById(R.id.btLogin);
             btLogin.setText("Log Out");
@@ -312,11 +318,14 @@ public class MainActivity extends MenuActivity {
             //miLogout.setEnabled(true);
         }else {
             isLoggedIn = false;
-            View btGo = findViewById(R.id.btGo);
+
             btGo.setVisibility(View.GONE);
 
-            View btScores = findViewById(R.id.btScores);
+
             btScores.setVisibility(View.GONE);
+
+
+            btResume.setVisibility(View.GONE);
 
             emailField.setText("");
             emailField.setEnabled(true);
@@ -338,6 +347,8 @@ public class MainActivity extends MenuActivity {
 
             View btScores = findViewById(R.id.btScores);
             btScores.setVisibility(View.VISIBLE);
+
+
             //turning login button to logout
             Button btLogin = findViewById(R.id.btLogin);
             btLogin.setText("Log Out");
@@ -345,24 +356,22 @@ public class MainActivity extends MenuActivity {
             emailField.setText(userEmail);
             emailField.setEnabled(false);
 
-            // setting menu item logout to visible
-            //View miLogout = findViewById(R.id.miLogout);
-            //miLogout.setVisibility(View.VISIBLE);
+
 
 
             //if else for resume and start new buttond
             View btResume = findViewById(R.id.btResume);
             if(currentQuestionNumber==-1){//if the quiz has not been initiated
 
-                btResume.setVisibility(View.GONE);
+                btResume.setEnabled(false);
 
-                btGo.setVisibility(View.VISIBLE);
+                btGo.setEnabled(true);
             }
             else{
 
-                btResume.setVisibility(View.VISIBLE);
+                btResume.setEnabled(true);
 
-                btGo.setVisibility(View.GONE);
+                btGo.setEnabled(false);
             }
 
         }else {
@@ -374,6 +383,9 @@ public class MainActivity extends MenuActivity {
 
             View btScores = findViewById(R.id.btScores);
             btScores.setVisibility(View.GONE);
+
+            View btResume = findViewById(R.id.btResume);
+            btResume.setVisibility(View.GONE);
 
             Button btLogin = findViewById(R.id.btLogin);
             btLogin.setText("Log In");
