@@ -32,9 +32,10 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.OneItemV
     @Override
     public void onBindViewHolder(@NonNull OneItemViewHolder oneItemViewHolder, final int i) {
         oneItemViewHolder.tvUser.setText(historyItems.get(i).email);
-        oneItemViewHolder.tvResult.setText(historyItems.get(i).getResult());
-        oneItemViewHolder.tvTime.setText(historyItems.get(i).result+"");
-        double r= historyItems.get(i).result;
+        oneItemViewHolder.tvTime.setText("Correct: " + historyItems.get(i).correct +
+                "/10, Time: "+ historyItems.get(i).seconds + " seconds");
+        oneItemViewHolder.tvResult.setText(historyItems.get(i).points+"");
+        double r= historyItems.get(i).points;
         if(r>950) oneItemViewHolder.ivStar.setImageResource(R.drawable.star10);
         else if(r>850) oneItemViewHolder.ivStar.setImageResource(R.drawable.star9);
         else if(r>750) oneItemViewHolder.ivStar.setImageResource(R.drawable.star8);

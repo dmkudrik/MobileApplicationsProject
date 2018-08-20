@@ -171,6 +171,14 @@
                 >
 
                 <Button
+                    android:id="@+id/btResult"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:onClick="openResult"
+                    android:visibility="gone"
+                    android:text="@string/btOpenResult"></Button>
+
+                <Button
                     android:id="@+id/btNewQuiz"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

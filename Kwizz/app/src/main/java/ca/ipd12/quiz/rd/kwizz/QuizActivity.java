@@ -38,6 +38,12 @@ public class QuizActivity extends MenuActivity {
     TextView tv;
     Button bt;
 
+    int rightAnswers = 0;
+    int points = 0;
+    int weightSum=0;
+    int weight=0;
+    Question q;
+
     RadioButton [] rbb = new RadioButton[10]; //array of questions indicators
     Handler mHandler = new Handler();
     ActionBar actionBar;
@@ -58,9 +64,12 @@ public class QuizActivity extends MenuActivity {
     @Override
     protected void onResume() {
         super.onResume();
-
+        if(confirmedAnswers==10){
+            isRunning=false;
+        }else{
+            isRunning = true; //initial start or come back from another Activity/Inactivity
+        }
         //Run time counter
-        isRunning = true; //initial start or come back from another Activity/Inactivity
         afterPause=false; //to start again after pause in the current activity
         secCounter();
     }
@@ -90,12 +99,6 @@ public class QuizActivity extends MenuActivity {
                         }
                     }
                 }
-            }
-            public Boolean getStop() {
-                return stop;
-            }
-            public void setStop(Boolean stop) {
-                this.stop = stop;
             }
         };
         mHandler.post(runnable);
@@ -276,16 +279,25 @@ public class QuizActivity extends MenuActivity {
             if (confirmedAnswers==10){
                 //show the results
                 currentQuizIsDone=true;
+                isRunning=false;
                 showResults();
                 Toast.makeText(QuizActivity.this, "Quiz is done!", Toast.LENGTH_SHORT).show();
                 //saveResults to DB
                 addToHistory();
-                openResultDetails();
+                Button btr = findViewById(R.id.btResult);
+                btr.setVisibility(View.VISIBLE);
+                //openResultDetails();
             }else{
                 //show the next question
                 goForward(view);
             }
         }
+    }
+    private void openResultDetails(){
+        Intent myIntent = new Intent(QuizActivity.this, ResultActivity.class);
+        myIntent.putExtra("points", points); //Optional parameters
+        myIntent.putExtra("rightAnswers", rightAnswers); //Optional parameters
+        QuizActivity.this.startActivity(myIntent);
     }
 
     //Saves a result to the DB
@@ -295,10 +307,20 @@ public class QuizActivity extends MenuActivity {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
 
         //Calculating ranking
-        int rightAnswers = 0;
-        int weightSum=0;
-        int weight=0;
-        Question q;
+        calculateRanking();
+
+        ContentValues values = new ContentValues();
+        values.put("email", "john.smith@mail.ca");
+        values.put("points", points);
+        values.put("seconds", kwizzTime);
+        values.put("correct", rightAnswers);
+        long rowId = db.insert("history", null, values);
+
+        Log.i(TAG, "Result was added to the History - row "+rowId);
+    }
+
+    private void calculateRanking() {
+
         for(int i = 0;i<10;i++ ){
             q = currentQuestions.get(i);
             weightSum+=q.answers.size();
@@ -307,15 +329,18 @@ public class QuizActivity extends MenuActivity {
                 weight+=q.answers.size();
             }
         }
-        double result = 1000*((weight*1.0)/weightSum);
-        rightAnswers = Integer.parseInt(String.format("%.0f", result));
 
-        ContentValues values = new ContentValues();
-        values.put("email", "john@mail.ca");
-        values.put("result", rightAnswers);
-        long rowId = db.insert("history", null, values);
-
-        Log.i(TAG, "Result was added to the History");
+        double timeKoefficient = 30.0/kwizzTime;
+        if(timeKoefficient>3){
+            timeKoefficient = 1.2;
+        }
+        else if(timeKoefficient>=1){
+            timeKoefficient=1.2*(timeKoefficient/3);
+        }else{
+            timeKoefficient = 1-(timeKoefficient*0.2);
+        }
+        double result = 1000*((weight*1.0)/weightSum)*timeKoefficient;
+        points = Integer.parseInt(String.format("%.0f", result));
     }
 
     //Set questions indicators by quiz results
@@ -398,16 +423,16 @@ public class QuizActivity extends MenuActivity {
         }
         //changes to Globals
         setCurrentQuestions(); //get new 10 random questions
+        if(confirmedAnswers==10) secCounter();
         currentQuestionNumber=0;
         confirmedAnswers=0;
         kwizzTime=0;
         addQuestion(Globals.currentQuestionNumber); // 1 - show number + text + answers for the first question
     }
 
-    private void openResultDetails(){
-        Intent myIntent = new Intent(QuizActivity.this, ResultActivity.class);
-//      myIntent.putExtra("key", value); //Optional parameters
-        QuizActivity.this.startActivity(myIntent);
-    }
 
+    public void openResult(View view) {
+
+        openResultDetails();
+    }
 }

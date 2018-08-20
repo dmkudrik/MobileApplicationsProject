@@ -28,7 +28,7 @@ public class HistoryActivity extends MenuActivity {
         MyDbHelper dbHelper = new MyDbHelper(this, "kwizzdb", null, VER);
         SQLiteDatabase db  = dbHelper.getReadableDatabase();
 
-        String[]columns = {"email", "result"};
+        String[]columns = {"email", "points", "seconds", "correct"};
 
         Cursor cursor = db.query("history", columns,null,
                 null,null,null,null);
@@ -38,8 +38,9 @@ public class HistoryActivity extends MenuActivity {
         while (cursor.moveToNext()){
             hi = new HistoryItem();
             hi.email = cursor.getString(0);
-            hi.result = cursor.getDouble(1);
-            //hi.resultTime = cursor.getString(4);
+            hi.points = cursor.getInt(1);
+            hi.seconds= cursor.getInt(2);
+            hi.correct = cursor.getInt(3);
             historyItems.add(hi);
 
             //Log.i("db2 ValueFromDB", cursor.getString(0) + " (" + cursor.getString(1)+ ") "+ cursor.getString(2));

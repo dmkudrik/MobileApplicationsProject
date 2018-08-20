@@ -32,7 +32,9 @@ public class MyDbHelper extends SQLiteOpenHelper {
         db.execSQL("CREATE TABLE history (\n" +
                 " id integer PRIMARY KEY AUTOINCREMENT, \n" +
                 " email text NOT NULL, \n" +
-                " result double NOT NULL \n" +
+                " points integer NOT NULL, \n" +
+                " seconds integer NOT NULL,\n" +
+                " correct integer NOT NULL\n" +
                 ")");
         Log.i(Globals.TAG, "Table history was created");
     }

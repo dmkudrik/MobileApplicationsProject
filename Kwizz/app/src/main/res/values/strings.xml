@@ -8,8 +8,6 @@
     <string name="goScores">History</string>
     <string name="goLogout">Log Out</string>
 
-
-
     <!--First Page-->
     <string name="tbEmail">Enter your email</string>
     <string name="btGo">Start quiz</string>
@@ -23,5 +21,6 @@
     <string name="btReset">Reset current quiz</string>
     <string name="btNewQuiz">New quiz</string>
     <string name="btEmail">Send results on my email</string>
+    <string name="btOpenResult">Open result details</string>
 
 </resources>
