@@ -17,25 +17,40 @@
         android:textSize="22sp"
         android:textColor="@color/colorPrimaryDark"
         />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_margin="6dp"
+        android:weightSum="6">
     <TextView
         android:id="@+id/tv_result"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="Your results"
         android:textSize="17sp"
         android:layout_margin="5dp"
-        />
-
+        android:layout_weight="5"
+                />
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:src="@drawable/mail"
+            android:layout_weight="1"
+            android:onClick="sendEmail"
+            />
+</LinearLayout>
     <android.support.v7.widget.RecyclerView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/rc_view_result"
         ></android.support.v7.widget.RecyclerView>
-    <!--<Button-->
-        <!--android:id="@+id/btEmail"-->
-        <!--android:layout_width="fill_parent"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:onClick="sendEmail"-->
-        <!--android:text="@string/btEmail"></Button>-->
+    <Button
+        android:id="@+id/btEmail"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:onClick="sendEmail"
+        android:text="@string/btEmail"></Button>
 
 </LinearLayout>

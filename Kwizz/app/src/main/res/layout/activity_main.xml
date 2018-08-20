@@ -8,7 +8,15 @@
     android:orientation="vertical"
     android:padding="5dp"
     >
-
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/logo"
+        android:layout_gravity="center_horizontal"
+        android:layout_margin="5dp"
+        android:scaleX="0.85"
+        android:scaleY="0.85"
+        />
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -20,7 +28,8 @@
         android:layout_height="wrap_content"
         android:hint="@string/tbEmail"
         android:inputType="textEmailAddress"
-        android:layout_width="fill_parent">
+        android:layout_width="fill_parent"
+        android:gravity="center_horizontal">
     </EditText>
     <Button
         android:id="@+id/btLogin"

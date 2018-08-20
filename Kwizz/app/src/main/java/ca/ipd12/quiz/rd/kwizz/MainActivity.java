@@ -34,6 +34,7 @@ import static ca.ipd12.quiz.rd.kwizz.Globals.allQuestions;
 import static ca.ipd12.quiz.rd.kwizz.Globals.NOQ;
 import static ca.ipd12.quiz.rd.kwizz.Globals.isLoggedIn;
 import static ca.ipd12.quiz.rd.kwizz.Globals.currentQuestionNumber;
+import static ca.ipd12.quiz.rd.kwizz.Globals.userEmail;
 
 public class MainActivity extends MenuActivity {
     Question q;
@@ -120,8 +121,6 @@ public class MainActivity extends MenuActivity {
             final   String INCORR_ANSWER = "incorrect_answers";
 
 
-
-
             String question;
             String corAnswer;
             String incorAnswer;
@@ -156,7 +155,6 @@ public class MainActivity extends MenuActivity {
                     e.printStackTrace();
                 }
 
-
                 JSONArray resultsArray2;
                 try {
                     question = Jsoup.parse(Json2.getString(QUESTION)).text();//using Jsoup library to decode special characters
@@ -175,8 +173,6 @@ public class MainActivity extends MenuActivity {
                     for(int j = 0; j < resultsArray2.length(); j++) {
                            aIncorr=new Answer();
                         incorAnswer = Jsoup.parse(resultsArray2.get(j).toString()).text();//using Jsoup library to decode special characters
-
-
 
                         aIncorr.answer = incorAnswer;
                         answers.add(aIncorr);//adding answer to answers list
@@ -286,10 +282,11 @@ public class MainActivity extends MenuActivity {
     }
     //the onClick listener for Login button
     public void login(View view) {
+
+        EditText emailField = (EditText) findViewById(R.id.tbEmail);
+
         if(!isLoggedIn) {//if not logged in
 
-
-            EditText emailField = (EditText) findViewById(R.id.tbEmail);
             Globals.userEmail = emailField.getText().toString();
             if (Globals.userEmail.isEmpty()) {
                 Toast.makeText(MainActivity.this,
@@ -307,6 +304,9 @@ public class MainActivity extends MenuActivity {
             Button btLogin = findViewById(R.id.btLogin);
             btLogin.setText("Log Out");
 
+            emailField.setText(userEmail);
+            emailField.setEnabled(false);
+
             // setting menu item logout to visible
            // View miLogout = findViewById(R.id.miLogout);
             //miLogout.setEnabled(true);
@@ -318,6 +318,9 @@ public class MainActivity extends MenuActivity {
             View btScores = findViewById(R.id.btScores);
             btScores.setVisibility(View.GONE);
 
+            emailField.setText("");
+            emailField.setEnabled(true);
+
             Button btLogin = findViewById(R.id.btLogin);
             btLogin.setText("Log In");
         }
@@ -326,8 +329,8 @@ public class MainActivity extends MenuActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        EditText emailField = findViewById(R.id.tbEmail);
         if(isLoggedIn) {
-
 
             //when logged in setting the visibility of the buttons to true
             View btGo = findViewById(R.id.btGo);
@@ -338,6 +341,9 @@ public class MainActivity extends MenuActivity {
             //turning login button to logout
             Button btLogin = findViewById(R.id.btLogin);
             btLogin.setText("Log Out");
+
+            emailField.setText(userEmail);
+            emailField.setEnabled(false);
 
             // setting menu item logout to visible
             //View miLogout = findViewById(R.id.miLogout);
@@ -350,18 +356,18 @@ public class MainActivity extends MenuActivity {
 
                 btResume.setVisibility(View.GONE);
 
-
                 btGo.setVisibility(View.VISIBLE);
             }
             else{
 
                 btResume.setVisibility(View.VISIBLE);
 
-
                 btGo.setVisibility(View.GONE);
             }
 
         }else {
+            emailField.setText("");
+            emailField.setEnabled(true);
 
             View btGo = findViewById(R.id.btGo);
             btGo.setVisibility(View.GONE);

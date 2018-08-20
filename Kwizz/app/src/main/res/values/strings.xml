@@ -2,9 +2,9 @@
     <string name="app_name">Kwizz</string>
 
     <!--Main Menu-->
-    <string name="goGo">Start quiz</string>
+    <string name="goGo">Start new quiz</string>
     <string name="goHome">Home page</string>
-    <string name="goAbout">About</string>
+    <string name="goEmail">Send result on email</string>
     <string name="goScores">History</string>
     <string name="goLogout">Log Out</string>
 

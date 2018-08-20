@@ -13,8 +13,13 @@
         android:title="@string/goScores"
         android:orderInCategory="3"
         ></item>
+    <item android:id="@+id/miEmail"
+        android:title="@string/goEmail"
+        android:orderInCategory="4"
+        android:enabled="false"
+        ></item>
     <item android:id="@+id/miLogout"
         android:title="@string/goLogout"
-        android:orderInCategory="4"
+        android:orderInCategory="5"
         ></item>
 </menu>
