@@ -52,9 +52,9 @@ public class ResultActivity extends MenuActivity {
     }
 
     //Creating Email
-    private void mailSender(){
+    public void mailSender(){
         messageBody+="Hello!!!<br/><br/>Here are result of your quiz, made in KWIZZ mobile application:<br/><h3>";
-        messageBody+=resultString;
+        messageBody+=QuizActivity.resultStr;
         messageBody+="</h3><br/>Details:<br/><br/>";
         for(int i = 0;i<10;i++){
             Question q = Globals.currentQuestions.get(i);

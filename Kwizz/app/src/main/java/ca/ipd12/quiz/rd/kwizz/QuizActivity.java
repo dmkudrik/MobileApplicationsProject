@@ -12,6 +12,8 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -32,7 +34,7 @@ import static ca.ipd12.quiz.rd.kwizz.Globals.isRunning;
 import static ca.ipd12.quiz.rd.kwizz.Globals.kwizzTime;
 
 public class QuizActivity extends MenuActivity {
-
+    public static String resultStr = "";
     RadioButton rb;
     RadioGroup rg;
     TextView tv;
@@ -48,7 +50,7 @@ public class QuizActivity extends MenuActivity {
     Handler mHandler = new Handler();
     ActionBar actionBar;
     Runnable runnable;
-    volatile boolean afterPause = false; //to manage time counting inside this Activity
+    public static volatile boolean afterPause = false; //to manage time counting inside this Activity
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,6 +61,16 @@ public class QuizActivity extends MenuActivity {
         addAnswersListeners();//adding RadioGroup listener
         questionManager();
 
+    }
+
+    //User able to send results on email after test is finished
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        if(confirmedAnswers==10){
+        MenuItem item = menu.findItem(R.id.miEmail);
+        item.setEnabled(true);
+        }
+        return true;
     }
 
     @Override
@@ -284,6 +296,8 @@ public class QuizActivity extends MenuActivity {
                 Toast.makeText(QuizActivity.this, "Quiz is done!", Toast.LENGTH_SHORT).show();
                 //saveResults to DB
                 addToHistory();
+                resultStr = "Correct answers: "+ rightAnswers + "/10, " + "Points: " + points +", Done: " +   Globals.kwizzTime + " seconds";
+
                 Button btr = findViewById(R.id.btResult);
                 btr.setEnabled(true);
                 //openResultDetails();
@@ -310,13 +324,11 @@ public class QuizActivity extends MenuActivity {
         calculateRanking();
 
         ContentValues values = new ContentValues();
-        values.put("email", "john.smith@mail.ca");
+        values.put("email", Globals.userEmail);
         values.put("points", points);
         values.put("seconds", kwizzTime);
         values.put("correct", rightAnswers);
         long rowId = db.insert("history", null, values);
-
-        Log.i(TAG, "Result was added to the History - row "+rowId);
     }
 
     private void calculateRanking() {
