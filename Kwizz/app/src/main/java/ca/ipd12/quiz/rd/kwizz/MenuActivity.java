@@ -95,6 +95,7 @@ public class MenuActivity extends AppCompatActivity {
             }
 
             isLoggedIn=false;
+            Globals.isRunning=false;
             Intent myIntent = new Intent(MenuActivity.this, MainActivity.class);
             MenuActivity.this.startActivity(myIntent);
         }

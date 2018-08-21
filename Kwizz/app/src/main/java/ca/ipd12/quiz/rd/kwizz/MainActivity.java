@@ -1,5 +1,6 @@
 package ca.ipd12.quiz.rd.kwizz;
 
+
 import android.widget.Button;
 import org.jsoup.Jsoup;
 import android.content.ContentValues;
@@ -46,6 +47,8 @@ public class MainActivity extends MenuActivity {
     ArrayList<Answer> answers;
     Answer aIncorr;
 
+    EditText initialET;
+   public  static String initialEmail;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,7 +78,20 @@ public class MainActivity extends MenuActivity {
         //quizGenerator();
         //fetcher();
 
+
     }
+
+    @Override
+    protected void onStop() {//saving email to variable
+        super.onStop();
+        initialET= findViewById(R.id.tbEmail);
+        initialEmail= initialET.getText().toString();
+
+
+    }
+
+
+
     public void getData(){
 
         URL apiURL;
@@ -338,6 +354,9 @@ public class MainActivity extends MenuActivity {
     @Override
     protected void onResume() {
         super.onResume();
+
+
+
         EditText emailField = findViewById(R.id.tbEmail);
         if(isLoggedIn) {
 
@@ -363,7 +382,7 @@ public class MainActivity extends MenuActivity {
 
 
 
-            //if else for resume and start new buttond
+            //if else for resume and start new buttons
 
             if(currentQuestionNumber==-1){//if the quiz has not been initiated
 
@@ -379,7 +398,10 @@ public class MainActivity extends MenuActivity {
             }
 
         }else {
-            emailField.setText("");
+            initialET= findViewById(R.id.tbEmail);//to place email if the screen position changed
+            initialET.setText(initialEmail);
+
+            emailField.setText(initialEmail);//log out
             emailField.setEnabled(true);
 
             View btGo = findViewById(R.id.btGo);
