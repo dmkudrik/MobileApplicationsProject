@@ -62,7 +62,8 @@ public class MainActivity extends MenuActivity {
         Globals.isRunning=false;
 
         if(!isLoggedIn) {
-            getData();
+            fetcher();
+
 
             //setting the visibility of buttons to 'gone' if not logged in
             View btGo = findViewById(R.id.btGo);
@@ -128,7 +129,7 @@ public class MainActivity extends MenuActivity {
 
            getDataFromJSON(s);
             quizGenerator();
-            fetcher();
+            //fetcher();
 
         }
         //this method converts JSON to strings and puts data to our objects
@@ -265,6 +266,7 @@ public class MainActivity extends MenuActivity {
     public void fetcher() {
         MyDbHelper dbHelper = new MyDbHelper(this, "kwizzdb", null, VER);
         SQLiteDatabase db = dbHelper.getReadableDatabase();
+
 
 //        if your SQL query is this
 //        SELECT name,roll FROM student WHERE name='Amit' AND roll='7'

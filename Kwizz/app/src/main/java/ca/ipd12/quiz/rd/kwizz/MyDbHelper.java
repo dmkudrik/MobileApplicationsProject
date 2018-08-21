@@ -8,9 +8,14 @@ import android.util.Log;
 
 public class MyDbHelper extends SQLiteOpenHelper {
 
+    MainActivity ma;
     public MyDbHelper(Context context, String name,
                       SQLiteDatabase.CursorFactory factory, int version){
+
         super(context, name, factory, version);
+        try{
+        ma = (MainActivity) context;}
+        catch (Exception e ){}
     }
 
     @Override
@@ -37,6 +42,8 @@ public class MyDbHelper extends SQLiteOpenHelper {
                 " correct integer NOT NULL\n" +
                 ")");
         Log.i(Globals.TAG, "Table history was created");
+        if(ma!=null){
+        ma.getData();}
     }
 
     @Override

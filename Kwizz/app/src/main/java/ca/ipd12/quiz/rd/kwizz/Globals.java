@@ -8,7 +8,7 @@ public class Globals {
 
 
     public static int NOQ=15; //Number of questions to load from API
-    public static final int VER = 33;//DB version
+    public static final int VER = 38;//DB version
     public static final String TAG = "kwizzz";//Debugging tag
 
     //Spent time to solve quiz - in seconds
