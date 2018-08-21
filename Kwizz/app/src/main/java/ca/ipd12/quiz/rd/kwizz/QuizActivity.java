@@ -201,7 +201,9 @@ public class QuizActivity extends MenuActivity {
         //set 10 first from shuffled as Current Set Of Questions
         Globals.currentQuestions = new ArrayList<>();
         for(int i = 0; i < 10; i++) {
-            Globals.currentQuestions.add(Globals.allQuestions.get(i));
+           Globals.currentQuestions.add(Globals.allQuestions.get(i));
+           Collections.shuffle(currentQuestions.get(i).answers);
+
         }
         //Clear previous answers
         for(Question sq : currentQuestions){
