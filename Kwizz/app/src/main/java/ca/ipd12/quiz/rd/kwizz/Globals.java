@@ -7,8 +7,8 @@ public class Globals {
     public  static boolean isLoggedIn=false;//flag
 
 
-    public static int NOQ=10; //Number of questions to load from API
-    public static final int VER = 30;//DB version
+    public static int NOQ=20; //Number of questions to load from API
+    public static final int VER = 31;//DB version
     public static final String TAG = "kwizzz";//Debugging tag
 
     //Spent time to solve quiz - in seconds

@@ -1,6 +1,8 @@
 package ca.ipd12.quiz.rd.kwizz;
 
 
+import android.content.DialogInterface;
+import android.support.v7.app.AlertDialog;
 import android.widget.Button;
 import org.jsoup.Jsoup;
 import android.content.ContentValues;
@@ -33,6 +35,7 @@ import static ca.ipd12.quiz.rd.kwizz.Globals.TAG;
 import static ca.ipd12.quiz.rd.kwizz.Globals.VER;
 import static ca.ipd12.quiz.rd.kwizz.Globals.allQuestions;
 import static ca.ipd12.quiz.rd.kwizz.Globals.NOQ;
+import static ca.ipd12.quiz.rd.kwizz.Globals.confirmedAnswers;
 import static ca.ipd12.quiz.rd.kwizz.Globals.isLoggedIn;
 import static ca.ipd12.quiz.rd.kwizz.Globals.currentQuestionNumber;
 import static ca.ipd12.quiz.rd.kwizz.Globals.userEmail;
@@ -416,8 +419,43 @@ public class MainActivity extends MenuActivity {
             Button btLogin = findViewById(R.id.btLogin);
             btLogin.setText("Log In");
         }
+    }
 
 
+    public void newKwizz(View view){
+        //if there are already answered questions - confirmation dialog
+        //Confirmation dialog listener
+        DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+                switch (which){
+                    case DialogInterface.BUTTON_POSITIVE:
+                        //Resume time counting and start new quiz
+                        createNewQuiz();
+                        break;
+
+                    case DialogInterface.BUTTON_NEGATIVE:
+                        break;
+                }
+            }
+        };
+
+        if(confirmedAnswers>0 && confirmedAnswers<9 ){
+            //Stop time counting
+            QuizActivity.afterPause=true;
+            //Show confirmation dialog
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder
+                    .setTitle("Start a new quiz?")
+                    .setMessage("You already have have answered question(s) in the current quiz.")
+                    .setIcon(android.R.drawable.ic_dialog_info)
+                    .setPositiveButton("Yes", dialogClickListener)
+                    .setNegativeButton("No", dialogClickListener)
+                    .show();
+        }else{
+            createNewQuiz();
+        }
     }
 
 }

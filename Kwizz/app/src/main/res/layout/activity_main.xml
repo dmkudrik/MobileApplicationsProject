@@ -46,7 +46,7 @@
         android:id="@+id/btGo"
         android:layout_height="wrap_content"
         android:text="@string/btGo"
-        android:onClick="openQuiz"
+        android:onClick="newKwizz"
         android:layout_width="fill_parent"
        >
 

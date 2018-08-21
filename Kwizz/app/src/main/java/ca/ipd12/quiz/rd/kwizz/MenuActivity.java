@@ -113,5 +113,17 @@ public class MenuActivity extends AppCompatActivity {
         MenuActivity.this.startActivity(myIntent);
     }
 
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        MenuItem item = menu.findItem(R.id.miEmail);
+        MenuItem item3 = menu.findItem(R.id.miEmail);
+        if(!isLoggedIn)item.setEnabled(false);
+        else item.setEnabled(true);
+
+        if(confirmedAnswers==10)item3.setEnabled(true);
+        else item3.setEnabled(false);
+        return true;
+    }
+
 
 }
