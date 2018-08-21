@@ -3,6 +3,7 @@ package ca.ipd12.quiz.rd.kwizz;
 import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
@@ -45,6 +46,7 @@ public class QuizActivity extends MenuActivity {
     int weightSum=0;
     int weight=0;
     Question q;
+    int orientation= Configuration.ORIENTATION_PORTRAIT;
 
     RadioButton [] rbb = new RadioButton[10]; //array of questions indicators
     Handler mHandler = new Handler();
@@ -76,16 +78,38 @@ public class QuizActivity extends MenuActivity {
     @Override
     protected void onResume() {
         super.onResume();
+
+        //Activate SeeResult button if isFinished
+        //Resume stopwatch if quiz is in progress
         if(confirmedAnswers==10){
             isRunning=false;
             Button btr = findViewById(R.id.btResult);
             btr.setEnabled(true);
+            for(int y=0; y<currentQuestions.get(currentQuestionNumber).answers.size();y++){
+                RadioGroup rgg = findViewById(R.id.rgAnswers);
+                rgg.getChildAt(y).setEnabled(false);
+            }
+
         }else{
             isRunning = true; //initial start or come back from another Activity/Inactivity
         }
         //Run time counter
         afterPause=false; //to start again after pause in the current activity
         secCounter();
+
+        //Get orientation
+        orientation = this.getResources().getConfiguration().orientation;
+        if (orientation == Configuration.ORIENTATION_PORTRAIT) {
+            // code for portrait mode
+        } else if(orientation==Configuration.ORIENTATION_LANDSCAPE){
+            // code for landscape mode
+
+        }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
     }
 
     public void secCounter(){
@@ -127,8 +151,6 @@ public class QuizActivity extends MenuActivity {
 
     //Formatting 10 small question indicators
     private void setIndicators() {
-        //
-
         LinearLayout ll = findViewById(R.id.indicators);
         for (int i =0; i<10;i++ ){
             rbb[i]= (RadioButton) ll.getChildAt(i);
@@ -260,12 +282,21 @@ public class QuizActivity extends MenuActivity {
         bt = findViewById(R.id.btConfirm);
         if(currentQuestions.get(currentQuestionNumber).isConfirmed){
             bt.setEnabled(false);
+            for(int y=0; y<currentQuestions.get(currentQuestionNumber).answers.size();y++){
+                RadioGroup rgg = findViewById(R.id.rgAnswers);
+                rgg.getChildAt(y).setEnabled(false);
+            }
         }else{
             bt.setEnabled(true);
+            for(int y=0; y<currentQuestions.get(currentQuestionNumber).answers.size();y++){
+                RadioGroup rgg = findViewById(R.id.rgAnswers);
+                rgg.getChildAt(y).setEnabled(true);
+            }
         }
         //set background for active indicator (current question)
         if(confirmedAnswers==10) showResults();
         else rbb[currentQuestionNumber].setBackgroundColor(getResources().getColor(R.color.colorCurrent));
+
     }
 
     //Go to previous question
@@ -300,6 +331,10 @@ public class QuizActivity extends MenuActivity {
 
                 Button btr = findViewById(R.id.btResult);
                 btr.setEnabled(true);
+                for(int y=0; y<currentQuestions.get(currentQuestionNumber).answers.size();y++){
+                    RadioGroup rgg = findViewById(R.id.rgAnswers);
+                    rgg.getChildAt(y).setEnabled(false);
+                }
                 //openResultDetails();
             }else{
                 //show the next question
@@ -445,6 +480,10 @@ public class QuizActivity extends MenuActivity {
         kwizzTime=0;
         Button btr = findViewById(R.id.btResult);
         btr.setEnabled(false);
+        for(int y=0; y<currentQuestions.get(currentQuestionNumber).answers.size();y++){
+            RadioGroup rgg = findViewById(R.id.rgAnswers);
+            rgg.getChildAt(y).setEnabled(true);
+        }
         addQuestion(Globals.currentQuestionNumber); // 1 - show number + text + answers for the first question
     }
 

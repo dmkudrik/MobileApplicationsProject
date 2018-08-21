@@ -22,6 +22,6 @@
     <string name="btReset">Reset current quiz</string>
     <string name="btNewQuiz">New quiz</string>
     <string name="btEmail">Send results on my email</string>
-    <string name="btOpenResult">Open result details</string>
+    <string name="btOpenResult">Result details</string>
 
 </resources>
